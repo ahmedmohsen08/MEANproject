@@ -1,0 +1,43 @@
+<form method="POST"
+  (ngSubmit)="onSubmit(ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)">
+
+
+  <label>ContactName</label>
+  <input type="text" name="ContactName" class="form-control" #ContactName>
+
+  <label>ContactTitle</label>
+  <input type="text" name="ContactTitle" #ContactTitle>
+  <label>Phone</label>
+  <input type="text" name="Phone" #Phone>
+  <label>Fax</label>
+  <input type="text" name="Fax" #Fax>
+  <label>Address</label>
+  <input type="text" name="Address" #Address>
+  <label>Region</label>
+  <input type="text" name="Region" #Region>
+  <label>City</label>
+  <input type="text" name="City" #City>
+  <label>Country</label>
+  <input type="text" name="Country" #Country>
+  <label>PostalCode</label>
+  <input type="text" name="PostalCode" #PostalCode>
+  <label>CompanyName</label>
+  <input type="text" name="CompanyName" #CompanyName>
+
+  <input type="submit" value="register">
+</form>
+
+
+
+<!--<form method="POST" [formGroup]="form"
+  (ngSubmit)="onSubmit(ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)">
+
+  <div class="form-group ">
+    <label>ContactName</label>
+    <input type="text" name="ContactName" class="form-control"
+     #ContactName formControlName="contactNameControl">
+     <div *ngIf="contactNameControl.touched && contactNameControl.invalid" class="alert alert-danger">
+      <div *ngIf="contactNameControl.errors.required">{{contactNameControl.errors.required}}</div>
+      <div *ngIf="contactNameControl.errors.minLength">{{contactNameControl.errors.minLength.requiredLenght}}</div>
+    </div>
+  </div>-->
