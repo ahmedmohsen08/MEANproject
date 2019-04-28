@@ -79,7 +79,7 @@
   <form method="POST"  #f="ngForm" class="needs-validation col-6" 
   (ngSubmit)="onSubmit(f,ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)"
   novalidate>
-
+   
 <div class="form-group">
   <label for="ContactName">ContactName</label>
   <input required minlength="5" maxlength="15" pattern="[a-zA-Z]+" ngModel #ContactNameModel="ngModel" type="text" name="ContactName" class="form-control" #ContactName class="form-control" style="width:50%">
