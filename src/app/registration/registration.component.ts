@@ -19,9 +19,12 @@ export class RegistrationComponent implements OnInit {
 // get contactNameControl(){
 //   return this.form.get('contactNameControl');
 // }
-  onSubmit(ContactName,ContactTitle,Phone,Fax,Address,Region,City,Country,PostalCode,CompanyName) {
+  onSubmit(form,ContactName,ContactTitle,Phone,Fax,Address,Region,City,Country,PostalCode,CompanyName) {
+   console.log(form.valid);
+   if(form.valid)
+   {
     console.log('submitting');
-    this.http.post('http://127.0.0.1:4600/register',
+    this.http.post('http://127.0.0.1:4200/register',
      {
        ContactName:ContactName,
        ContactTitle: ContactTitle,
@@ -36,5 +39,8 @@ export class RegistrationComponent implements OnInit {
        }).toPromise().catch(error=>{
       console.log(error);
     });
-  }
+   }
+  
+   }
+  
 }
