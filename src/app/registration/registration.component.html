@@ -63,20 +63,9 @@
 
 
 
-<!--<form method="POST" [formGroup]="form"
-  (ngSubmit)="onSubmit(ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)">
-
-  <div class="form-group ">
-    <label>ContactName</label>
-    <input type="text" name="ContactName" class="form-control"
-     #ContactName formControlName="contactNameControl">
-     <div *ngIf="contactNameControl.touched && contactNameControl.invalid" class="alert alert-danger">
-      <div *ngIf="contactNameControl.errors.required">{{contactNameControl.errors.required}}</div>
-      <div *ngIf="contactNameControl.errors.minLength">{{contactNameControl.errors.minLength.requiredLenght}}</div>
-    </div>
-  </div>-->
   <h3>Registeration Form</h3>
-  <form method="POST"  #f="ngForm" class="needs-validation col-6" 
+  
+  <form method="POST"  #f="ngForm" class="needs-validation  col-6" 
   (ngSubmit)="onSubmit(f,ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)"
   novalidate>
    

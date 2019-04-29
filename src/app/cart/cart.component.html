@@ -1,0 +1,28 @@
+<div class="container">
+<div class="row">
+  <table class="table table-hover">
+   <thead>
+     <tr>
+      
+     <th>Product Name</th>
+     <th>Product Price</th>
+     <th>Product Quantity</th>
+     <th>TotalProductPrice</th>
+    </tr>
+   </thead>
+   <tbody>
+     <tr *ngFor="let prd of ProductsCart;index as i ">
+      <td>{{prd.productName}}</td>
+      <td>{{prd.UnitPrice}}</td>
+      <td>{{prd.quantity}}</td>
+      <td>{{prd.TotalPrice}}</td>
+      <td><input type="button" value="Edit" class="btn btn-success"></td>    
+      <td><input type="button" value="Delete" class="btn btn-danger" (click)="DeleteFromCart(i)"></td>    
+     </tr>
+     
+   </tbody>
+
+  </table>
+  <input type="button" value="Checkout" class="btn btn-primary">
+</div>
+</div>
