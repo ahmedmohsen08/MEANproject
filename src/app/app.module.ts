@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,7 +10,8 @@ import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule,FormControl,FormGroup, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductsComponent } from './products/products.component';
-import { CookieService } from 'ngx-cookie-service';
+import { DetailsProductComponent } from './details-product/details-product.component';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { CookieService } from 'ngx-cookie-service';
     NavbarComponent,
     RegistrationComponent,
     LoginComponent,
-    ProductsComponent
+    ProductsComponent,
+    DetailsProductComponent,
+    CartComponent
   ],
   imports: [
     BrowserModule,

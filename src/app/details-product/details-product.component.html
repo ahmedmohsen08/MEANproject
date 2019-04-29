@@ -1,0 +1,19 @@
+<div class="row bg-warning">
+  <div class="thumbnail bg-dark center col-6">
+    <p class="center text-white">"ProductName: {{ProductName}}</p>
+    <p class="center text-white">"ProductPrice: "{{UnitPrice}}</p>
+    <input pattern="[0-9]+" ngModel #quantityModel="ngModel" type="text" placeholder="product quantity" #quantity>
+    <div class="alert alert-danger" *ngIf="quantityModel.touched && !quantityModel.valid">
+      <div *ngIf="quantityModel.errors.pattern">ProductQuantity doesn't match the pattern</div>
+    </div>
+    <div *ngIf="quantityModel.valid">
+      <div *ngIf=!valid>
+        <div class="alert alert-danger">
+        Invalid Quantity
+        </div>
+      </div>
+    <input type="button" value="AddToCart" class="btn btn-success" (click)="AddToCart(quantity.value)">
+    </div>
+    </div>
+
+  </div>
