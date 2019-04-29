@@ -9,6 +9,7 @@ import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule,FormControl,FormGroup, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductsComponent } from './products/products.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { ProductsComponent } from './products/products.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

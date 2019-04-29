@@ -30,8 +30,11 @@
       </li>
     </ul>
     <div style="float:right">
-      <a class="btn btn-primary" routerLink='/registration'>register</a>
-      <a class="btn btn-primary" routerLink='/login'>login</a>
+      <a class="btn btn-primary" routerLink=''>Cart</a>
+      <a class="btn btn-primary" routerLink='/registration' *ngIf="cookie.get('accountUserName')==''">register</a>
+      <a class="btn btn-primary" routerLink='/login' *ngIf="cookie.get('accountUserName')==''">login</a>
+      <a class="btn btn-primary" routerLink='' *ngIf="cookie.get('accountUserName')!=''">Profile</a>
+      <a class="btn btn-primary" (click)="Logout()" *ngIf="cookie.get('accountUserName')!=''">Logout</a>
     </div>
 
   </div>

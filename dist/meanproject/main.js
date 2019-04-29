@@ -144,6 +144,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var _products_products_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./products/products.component */ "./src/app/products/products.component.ts");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/index.js");
+
 
 
 
@@ -174,7 +176,7 @@ var AppModule = /** @class */ (function () {
                 _angular_forms__WEBPACK_IMPORTED_MODULE_8__["FormsModule"],
                 _angular_common_http__WEBPACK_IMPORTED_MODULE_9__["HttpClientModule"]
             ],
-            providers: [],
+            providers: [ngx_cookie_service__WEBPACK_IMPORTED_MODULE_11__["CookieService"]],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_4__["AppComponent"]]
         })
     ], AppModule);
@@ -203,7 +205,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  login works!\n</p>\n"
+module.exports = "<form method=\"POST\" action=\"index.html\" #f=\"ngForm\" class=\"needs-validation col-6\"\n  (ngSubmit)=\"onSubmit(f,ContactName.value,Password.value)\"\n  novalidate>\n\n  <div class=\"form-group\">\n    <label for=\"ContactName\">ContactName</label>\n    <input required minlength=\"5\" maxlength=\"15\" pattern=\"[a-zA-Z]+\" ngModel #ContactNameModel=\"ngModel\" type=\"text\"\n      name=\"ContactName\" class=\"form-control\" #ContactName class=\"form-control\" style=\"width:50%\">\n    <span class=\"invalid-feedback\">please fill out this field</span>\n    <div class=\"alert alert-danger\" *ngIf=\"ContactNameModel.touched && !ContactNameModel.valid\">\n      <div *ngIf=\"ContactNameModel.errors.required\">ContactName is required</div>\n      <div *ngIf=\"ContactNameModel.errors.minLength\">ContactName should be minLength\n        {{ContactNameModel.errors.minLength.requiredLength}}</div>\n      <div *ngIf=\"ContactNameModel.errors.pattern\">\"ContactName doesn't match the pattern\"</div>\n    </div>\n  </div>\n\n  <div class=\"form-group\">\n    <label for=\"Password\">Password</label>\n    <input required minlength=\"5\" maxlength=\"15\" pattern=\"[a-zA-Z0-9]+\" ngModel #PasswordModel=\"ngModel\" type=\"text\"\n      name=\"Password\" class=\"form-control\" #Password class=\"form-control\" style=\"width:50%\">\n    <span class=\"invalid-feedback\">please fill out this field</span>\n    <div class=\"alert alert-danger\" *ngIf=\"PasswordModel.touched && !PasswordModel.valid\">\n      <div *ngIf=\"PasswordModel.errors.required\">Password is required</div>\n      <div *ngIf=\"PasswordModel.errors.minLength\">Password should be minLength\n        {{PasswordModel.errors.minLength.requiredLength}}</div>\n      <div *ngIf=\"PasswordModel.errors.pattern\">\"Password doesn't match the pattern\"</div>\n    </div>\n  </div>\n\n  <input type=\"submit\" value=\"login\" class=\"btn btn-primary\">\n</form>"
 
 /***/ }),
 
@@ -219,12 +221,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoginComponent", function() { return LoginComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+
 
 
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent() {
+    function LoginComponent(http) {
+        this.http = http;
     }
     LoginComponent.prototype.ngOnInit = function () {
+    };
+    LoginComponent.prototype.onSubmit = function (form, ContactName, Password) {
+        console.log(form.valid);
+        if (form.valid) {
+            console.log('logging in');
+            this.http.post('http://127.0.0.1:7000/login', {
+                ContactName: ContactName,
+                Password: Password,
+            }).toPromise()
+                .then(function (data) {
+                console.log('role: ' + JSON.parse(JSON.stringify(data)));
+            })
+                .catch(function (error) {
+                console.log(error);
+            });
+        }
     };
     LoginComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -232,7 +253,7 @@ var LoginComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./login.component.html */ "./src/app/login/login.component.html"),
             styles: [__webpack_require__(/*! ./login.component.css */ "./src/app/login/login.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
     ], LoginComponent);
     return LoginComponent;
 }());
@@ -259,7 +280,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\r\n  <a class=\"navbar-brand\" href=\"#\">Navbar</a>\r\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\"\r\n    aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\r\n    <span class=\"navbar-toggler-icon\"></span>\r\n  </button>\r\n\r\n  <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\r\n    <ul class=\"navbar-nav mr-auto\">\r\n      <li class=\"nav-item active\">\r\n        <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\r\n      </li>\r\n      <li class=\"nav-item\">\r\n        <a class=\"nav-link\" routerLink=\"allProducts\">Products</a>\r\n      </li>\r\n      <li class=\"nav-item dropdown\">\r\n        <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\"\r\n          aria-haspopup=\"true\" aria-expanded=\"false\">\r\n          Dropdown\r\n        </a>\r\n        <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\r\n          <a class=\"dropdown-item\" href=\"#\">Action</a>\r\n          <a class=\"dropdown-item\" href=\"#\">Another action</a>\r\n          <div class=\"dropdown-divider\"></div>\r\n          <a class=\"dropdown-item\" href=\"#\">Something else here</a>\r\n        </div>\r\n      </li>\r\n      <li class=\"nav-item\">\r\n        <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\r\n      </li>\r\n    </ul>\r\n    <div style=\"float:right\">\r\n      <a class=\"btn btn-primary\" routerLink='/registration'>register</a>\r\n      <a class=\"btn btn-primary\" routerLink='/login'>login</a>\r\n    </div>\r\n\r\n  </div>\r\n</nav>"
+module.exports = "<nav class=\"navbar navbar-expand-lg navbar-light bg-light\">\r\n  <a class=\"navbar-brand\" href=\"#\">Navbar</a>\r\n  <button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\" data-target=\"#navbarSupportedContent\"\r\n    aria-controls=\"navbarSupportedContent\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\r\n    <span class=\"navbar-toggler-icon\"></span>\r\n  </button>\r\n\r\n  <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\r\n    <ul class=\"navbar-nav mr-auto\">\r\n      <li class=\"nav-item active\">\r\n        <a class=\"nav-link\" href=\"#\">Home <span class=\"sr-only\">(current)</span></a>\r\n      </li>\r\n      <li class=\"nav-item\">\r\n        <a class=\"nav-link\" routerLink=\"allProducts\">Products</a>\r\n      </li>\r\n      <li class=\"nav-item dropdown\">\r\n        <a class=\"nav-link dropdown-toggle\" href=\"#\" id=\"navbarDropdown\" role=\"button\" data-toggle=\"dropdown\"\r\n          aria-haspopup=\"true\" aria-expanded=\"false\">\r\n          Dropdown\r\n        </a>\r\n        <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">\r\n          <a class=\"dropdown-item\" href=\"#\">Action</a>\r\n          <a class=\"dropdown-item\" href=\"#\">Another action</a>\r\n          <div class=\"dropdown-divider\"></div>\r\n          <a class=\"dropdown-item\" href=\"#\">Something else here</a>\r\n        </div>\r\n      </li>\r\n      <li class=\"nav-item\">\r\n        <a class=\"nav-link disabled\" href=\"#\">Disabled</a>\r\n      </li>\r\n    </ul>\r\n    <div style=\"float:right\">\r\n      <a class=\"btn btn-primary\" routerLink=''>Cart</a>\r\n      <a class=\"btn btn-primary\" routerLink='/registration' *ngIf=\"cookie.get('accountUserName')==''\">register</a>\r\n      <a class=\"btn btn-primary\" routerLink='/login' *ngIf=\"cookie.get('accountUserName')==''\">login</a>\r\n      <a class=\"btn btn-primary\" routerLink='' *ngIf=\"cookie.get('accountUserName')!=''\">Profile</a>\r\n      <a class=\"btn btn-primary\" (click)=\"Logout()\" *ngIf=\"cookie.get('accountUserName')!=''\">Logout</a>\r\n    </div>\r\n\r\n  </div>\r\n</nav>"
 
 /***/ }),
 
@@ -275,12 +296,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NavbarComponent", function() { return NavbarComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/index.js");
+
 
 
 var NavbarComponent = /** @class */ (function () {
-    function NavbarComponent() {
+    function NavbarComponent(cookie) {
+        this.cookie = cookie;
     }
     NavbarComponent.prototype.ngOnInit = function () {
+    };
+    NavbarComponent.prototype.Logout = function () {
+        this.cookie.set('accountUserName', '');
     };
     NavbarComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -288,7 +315,7 @@ var NavbarComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./navbar.component.html */ "./src/app/navbar/navbar.component.html"),
             styles: [__webpack_require__(/*! ./navbar.component.css */ "./src/app/navbar/navbar.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_cookie_service__WEBPACK_IMPORTED_MODULE_2__["CookieService"]])
     ], NavbarComponent);
     return NavbarComponent;
 }());
@@ -341,7 +368,7 @@ var ProductsComponent = /** @class */ (function () {
     }
     ProductsComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.http.get('http://127.0.0.1:4600/getAllProducts').subscribe(function (result) {
+        this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
             _this.products = result;
         });
     };
@@ -378,7 +405,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form method=\"POST\"\n  (ngSubmit)=\"onSubmit(ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)\">\n\n\n  <label>ContactName</label>\n  <input type=\"text\" name=\"ContactName\" class=\"form-control\" #ContactName>\n\n  <label>ContactTitle</label>\n  <input type=\"text\" name=\"ContactTitle\" #ContactTitle>\n  <label>Phone</label>\n  <input type=\"text\" name=\"Phone\" #Phone>\n  <label>Fax</label>\n  <input type=\"text\" name=\"Fax\" #Fax>\n  <label>Address</label>\n  <input type=\"text\" name=\"Address\" #Address>\n  <label>Region</label>\n  <input type=\"text\" name=\"Region\" #Region>\n  <label>City</label>\n  <input type=\"text\" name=\"City\" #City>\n  <label>Country</label>\n  <input type=\"text\" name=\"Country\" #Country>\n  <label>PostalCode</label>\n  <input type=\"text\" name=\"PostalCode\" #PostalCode>\n  <label>CompanyName</label>\n  <input type=\"text\" name=\"CompanyName\" #CompanyName>\n\n  <input type=\"submit\" value=\"register\">\n</form>\n\n\n\n<!--<form method=\"POST\" [formGroup]=\"form\"\n  (ngSubmit)=\"onSubmit(ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)\">\n\n  <div class=\"form-group \">\n    <label>ContactName</label>\n    <input type=\"text\" name=\"ContactName\" class=\"form-control\"\n     #ContactName formControlName=\"contactNameControl\">\n     <div *ngIf=\"contactNameControl.touched && contactNameControl.invalid\" class=\"alert alert-danger\">\n      <div *ngIf=\"contactNameControl.errors.required\">{{contactNameControl.errors.required}}</div>\n      <div *ngIf=\"contactNameControl.errors.minLength\">{{contactNameControl.errors.minLength.requiredLenght}}</div>\n    </div>\n  </div>-->"
+module.exports = "<!--<form method=\"POST\" class=\"needs-validation\" \r\n  (ngSubmit)=\"onSubmit(ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)\"\r\n  novalidate>\r\n\r\n<div class=\"form-group\">\r\n  <label for=\"ContactName\">ContactName</label>\r\n  <input type=\"text\" name=\"ContactName\" class=\"form-control\" #ContactName class=\"form-control\" style=\"width:50%\" required pattern=\"\">\r\n  <span  class=\"invalid-feedback\">please fill out this field</span>\r\n\r\n</div>\r\n\r\n<div class=\"form-group\">\r\n  <label class=\"control-label\">ContactTitle</label>\r\n  <input type=\"text\" name=\"ContactTitle\" #ContactTitle class=\"form-control\" style=\"width:50%\" required>\r\n  <span  class=\"invalid-feedback\">please fill out this field</span>\r\n\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n  <label class=\"control-label\">Phone</label>\r\n  <input type=\"text\" name=\"Phone\" #Phone class=\"form-control\" style=\"width:50%\" required>\r\n  <span id=\"ContactName_error\" class=\"invalid-feedback\">please fill out this field</span>\r\n\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n  <label class=\"control-label\">Fax</label>\r\n  <input type=\"text\" name=\"Fax\" #Fax class=\"form-control\" style=\"width:50%\" required>\r\n  <span  class=\"invalid-feedback\">please fill out this field</span>\r\n  </div>\r\n  <div class=\"form-group\">\r\n  <label class=\"control-label\">Address</label>\r\n  <input type=\"text\" name=\"Address\" #Address class=\"form-control\" style=\"width:50%\" required>\r\n  <span  class=\"invalid-feedback\">please fill out this field</span>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n  <label class=\"control-label\">Region</label>\r\n  <input type=\"text\" name=\"Region\" #Region class=\"form-control\" style=\"width:50%\" required> \r\n  <span  class=\"invalid-feedback\">please fill out this field</span>\r\n  </div>\r\n<div class=\"form-group\">\r\n  <label class=\"control-label\">City</label>\r\n  <input type=\"text\" name=\"City\" #City class=\"form-control\" style=\"width:50%\">\r\n  </div>\r\n  <div class=\"form-group\">\r\n  <label class=\"control-label\">Country</label>\r\n  <input type=\"text\" name=\"Country\" #Country class=\"form-control\" style=\"width:50%\">\r\n  </div>\r\n  <div class=\"form-group\">\r\n  <label>PostalCode</label>\r\n  <input type=\"text\" name=\"PostalCode\" #PostalCode class=\"form-control\" style=\"width:50%\">\r\n  </div>\r\n  <div class=\"form-group\">\r\n  <label>CompanyName</label>\r\n  <input type=\"text\" name=\"CompanyName\" #CompanyName class=\"form-control\" style=\"width:50%\">\r\n  </div>\r\n\r\n  <input type=\"submit\" value=\"register\" class=\"btn btn-primary\">\r\n</form>\r\n-->\r\n\r\n\r\n\r\n\r\n<!--<form method=\"POST\" [formGroup]=\"form\"\r\n  (ngSubmit)=\"onSubmit(ContactName.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)\">\r\n\r\n  <div class=\"form-group \">\r\n    <label>ContactName</label>\r\n    <input type=\"text\" name=\"ContactName\" class=\"form-control\"\r\n     #ContactName formControlName=\"contactNameControl\">\r\n     <div *ngIf=\"contactNameControl.touched && contactNameControl.invalid\" class=\"alert alert-danger\">\r\n      <div *ngIf=\"contactNameControl.errors.required\">{{contactNameControl.errors.required}}</div>\r\n      <div *ngIf=\"contactNameControl.errors.minLength\">{{contactNameControl.errors.minLength.requiredLenght}}</div>\r\n    </div>\r\n  </div>-->\r\n<h3>Registeration Form</h3>\r\n<form method=\"POST\" #f=\"ngForm\" class=\"needs-validation col-6\"\r\n  (ngSubmit)=\"onSubmit(f,ContactName.value,Password.value,ContactTitle.value,Phone.value,Fax.value,Address.value,Region.value,City.value,Country.value,PostalCode.value,CompanyName.value)\"\r\n  novalidate>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"ContactName\">ContactName</label>\r\n    <input required minlength=\"5\" maxlength=\"15\" pattern=\"[a-zA-Z]+\" ngModel #ContactNameModel=\"ngModel\" type=\"text\"\r\n      name=\"ContactName\" class=\"form-control\" #ContactName class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"ContactNameModel.touched && !ContactNameModel.valid\">\r\n      <div *ngIf=\"ContactNameModel.errors.required\">ContactName is required</div>\r\n      <div *ngIf=\"ContactNameModel.errors.minLength\">ContactName should be minLength\r\n        {{ContactNameModel.errors.minLength.requiredLength}}</div>\r\n      <div *ngIf=\"ContactNameModel.errors.pattern\">\"ContactName doesn't match the pattern\"</div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"Password\">Password</label>\r\n    <input required minlength=\"5\" maxlength=\"15\" pattern=\"[a-zA-Z0-9]+\" ngModel #PasswordModel=\"ngModel\" type=\"text\"\r\n      name=\"Password\" class=\"form-control\" #Password class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"PasswordModel.touched && !PasswordModel.valid\">\r\n      <div *ngIf=\"PasswordModel.errors.required\">Password is required</div>\r\n      <div *ngIf=\"PasswordModel.errors.minLength\">Password should be minLength\r\n        {{PasswordModel.errors.minLength.requiredLength}}</div>\r\n      <div *ngIf=\"PasswordModel.errors.pattern\">\"Password doesn't match the pattern\"</div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label class=\"control-label\">ContactTitle</label>\r\n    <input required pattern=\"[a-zA-Z]+\" type=\"text\" name=\"ContactTitle\" #ContactTitle ngModel\r\n      #ContactTitleModel=\"ngModel\" class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"ContactTitleModel.touched && !ContactTitleModel.valid\">\r\n      <div *ngIf=\"ContactTitleModel.errors.required\">ContactTitle is required</div>\r\n      <div *ngIf=\"ContactTitleModel.errors.minLength\">ContactTitle should be minLength\r\n        {{ContactTitleModel.errors.minLength.requiredLength}}</div>\r\n      <div *ngIf=\"ContactTitleModel.errors.pattern\">\"ContactTitle doesn't match the pattern\"</div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label class=\"control-label\">Phone</label>\r\n    <input required pattern=\"(01)[0-9]{9}\" ngModel #phoneModel=\"ngModel\" type=\"text\" name=\"Phone\" #Phone\r\n      class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"phoneModel.touched && !phoneModel.valid\">\r\n      <div *ngIf=\"phoneModel.errors.required\">phone is required</div>\r\n      <div *ngIf=\"phoneModel.errors.pattern\">\"phone doesn't match the pattern\"</div>\r\n    </div>\r\n  </div>\r\n\r\n\r\n  <div class=\"form-group\">\r\n    <label class=\"control-label\">Fax</label>\r\n    <input required pattern=\"[0-9]{5}\" ngModel #faxModel=\"ngModel\" type=\"text\" name=\"Fax\" #Fax class=\"form-control\"\r\n      style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"faxModel.touched && !faxModel.valid\">\r\n      <div *ngIf=\"faxModel.errors.required\">fax is required</div>\r\n      <div *ngIf=\"faxModel.errors.pattern\">\"fax doesn't match the pattern\"</div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label class=\"control-label\">Address</label>\r\n    <input required ngModel #AddressModel=\"ngModel\" type=\"text\" name=\"Address\" #Address class=\"form-control\"\r\n      style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"AddressModel.touched && !AddressModel.valid\">\r\n      <div *ngIf=\"AddressModel.errors.required\">Address is required</div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label class=\"control-label\">Region</label>\r\n    <input required ngModel #RegionModel=\"ngModel\" type=\"text\" name=\"Region\" #Region class=\"form-control\"\r\n      style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"RegionModel.touched && !RegionModel.valid\">\r\n      <div *ngIf=\"RegionModel.errors.required\">Region is required</div>\r\n    </div>\r\n\r\n  </div>\r\n  <div class=\"form-group\">\r\n    <label class=\"control-label\">City</label>\r\n    <input required pattern=\"[a-zA-Z]+\" ngModel #cityModel=\"ngModel\" type=\"text\" name=\"City\" #City class=\"form-control\"\r\n      style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"cityModel.touched && !cityModel.valid\">\r\n      <div *ngIf=\"cityModel.errors.required\">city is required</div>\r\n      <div *ngIf=\"cityModel.errors.pattern\">\"city doesn't match the pattern\"</div>\r\n\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label class=\"control-label\">Country</label>\r\n    <input required pattern=\"[a-zA-Z]+\" ngModel #countryModel=\"ngModel\" type=\"text\" name=\"Country\" #Country\r\n      class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"countryModel.touched && !countryModel.valid\">\r\n      <div *ngIf=\"countryModel.errors.required\">country is required</div>\r\n      <div *ngIf=\"countryModel.errors.pattern\">\"country doesn't match the pattern\"</div>\r\n\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label>PostalCode</label>\r\n    <input required type=\"text\" name=\"PostalCode\" #PostalCode class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label>CompanyName</label>\r\n    <input required pattern=\"[a-zA-Z]+\" ngModel #companyModel=\"ngModel\" type=\"text\" name=\"CompanyName\" #CompanyName\r\n      class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"companyModel.touched && !companyModel.valid\">\r\n      <div *ngIf=\"companyModel.errors.required\">CompanyName is required</div>\r\n      <div *ngIf=\"companyModel.errors.pattern\">\"CompanyName doesn't match the pattern\"</div>\r\n    </div>\r\n  </div>\r\n\r\n  <input type=\"submit\" value=\"register\" class=\"btn btn-primary\">\r\n</form>"
 
 /***/ }),
 
@@ -410,22 +437,26 @@ var RegistrationComponent = /** @class */ (function () {
     // get contactNameControl(){
     //   return this.form.get('contactNameControl');
     // }
-    RegistrationComponent.prototype.onSubmit = function (ContactName, ContactTitle, Phone, Fax, Address, Region, City, Country, PostalCode, CompanyName) {
-        console.log('submitting');
-        this.http.post('http://127.0.0.1:4600/register', {
-            ContactName: ContactName,
-            ContactTitle: ContactTitle,
-            Phone: Phone,
-            Fax: Fax,
-            Address: Address,
-            Region: Region,
-            City: City,
-            Country: Country,
-            PostalCode: PostalCode,
-            CompanyName: CompanyName
-        }).toPromise().catch(function (error) {
-            console.log(error);
-        });
+    RegistrationComponent.prototype.onSubmit = function (form, ContactName, Password, ContactTitle, Phone, Fax, Address, Region, City, Country, PostalCode, CompanyName) {
+        console.log(form.valid);
+        if (form.valid) {
+            console.log('submitting');
+            this.http.post('http://127.0.0.1:7000/register', {
+                ContactName: ContactName,
+                Password: Password,
+                ContactTitle: ContactTitle,
+                Phone: Phone,
+                Fax: Fax,
+                Address: Address,
+                Region: Region,
+                City: City,
+                Country: Country,
+                PostalCode: PostalCode,
+                CompanyName: CompanyName
+            }).toPromise().catch(function (error) {
+                console.log(error);
+            });
+        }
     };
     RegistrationComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
