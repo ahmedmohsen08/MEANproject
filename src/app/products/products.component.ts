@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-products',
@@ -9,10 +10,10 @@ import { HttpClient } from '@angular/common/http';
 export class ProductsComponent implements OnInit {
   IsUser;
   products
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private cookie: CookieService) { }
 
   ngOnInit() {
-    this.IsUser=false;
+    this.cookie.get('role')=='admin'?this.IsUser=false:this.IsUser=true;
     this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
       this.products = result;
     });

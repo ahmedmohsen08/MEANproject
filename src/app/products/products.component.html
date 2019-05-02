@@ -1,40 +1,38 @@
-
-<div *ngIf="IsUser;else admin">
-<div class="row bg-warning">
+<div *ngIf="cookie.get('role')=='user'">
+  <div class="row bg-warning">
     <div class="col-2 " *ngFor="let product of products">
-      <div  class="thumbnail bg-dark">
-      <a class="text-white" [routerLink]="['/details-product',product.ProductID,product.ProductName,product.UnitPrice,product.UnitsInStock]">
+      <div class="thumbnail bg-dark">
+        <a class="text-white"
+          [routerLink]="['/details-product',product.ProductID,product.ProductName,product.UnitPrice,product.UnitsInStock]">
           <p class=" center">"ProductName: "{{product.ProductName}}</p>
           <p class=" center">"ProductPrice: "{{product.UnitPrice}}</p>
-      </a>
+        </a>
       </div>
     </div>
   </div>
 </div>
 
-<ng-template #admin>
-    <table class="table table-dark table-hover">
-        <thead>
-            <tr>
-              <th>ProductID</th>
-              <th>ProductName</th>
-              <th>ProductPrice</th>
-              <th>ProductQuantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-      
-              <td>{{product.ProductID}}</td>
-              <td>{{product.ProductName}}</td>
-              <td>{{product.UnitPrice}}</td>
-              <td>{{product.UnitsInStock}}</td>
-              <td><input type="button" value="Delete" class="btn btn-danger"></td>
-              <td><input type="button" value="Edit" class="btn btn-success"></td>
-            </tr>
-      
-        </tbody>
-      </table>
-</ng-template>
+<div *ngIf="cookie.get('role')=='admin'">
+  <table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th>ProductID</th>
+        <th>ProductName</th>
+        <th>ProductPrice</th>
+        <th>ProductQuantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products">
 
+        <td>{{product.ProductID}}</td>
+        <td>{{product.ProductName}}</td>
+        <td>{{product.UnitPrice}}</td>
+        <td>{{product.UnitsInStock}}</td>
+        <td><input type="button" value="Delete" class="btn btn-danger"></td>
+        <td><input type="button" value="Edit" class="btn btn-success"></td>
+      </tr>
 
+    </tbody>
+  </table>
+</div>

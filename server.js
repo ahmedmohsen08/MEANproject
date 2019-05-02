@@ -35,10 +35,34 @@ const productsSchema = new mongoose.Schema({
     UnitPrice: String,
     UnitsInStock: String,
     UnitsOnOrder: String
-})
+});
+
+const order_detailsSchema = new mongoose.Schema({
+    ProductID: { type: mongoose.Types.ObjectId, ref: 'products' },
+    UnitPrice: String,
+    Quantity: String
+}, { toJSON: { virtuals: true } });
+
+order_detailsSchema.virtual('product', {
+    ref: 'products', // The model to use
+    localField: 'ProductID', // Find people where `localField`
+    foreignField: 'ProductID', // is equal to `foreignField`
+    // If `justOne` is true, 'members' will be a single doc as opposed to
+    // an array. `justOne` is false by default.
+    justOne: true,
+});
+
+const orderSchema = new mongoose.Schema({
+    OrderID:String,
+    CustomerID:String,
+    OrderDate:String,
+    ShipAddress:String
+});
 
 const Customer = mongoose.model('customers', customersSchema);
-const Product = mongoose.model('product', productsSchema);
+const Product = mongoose.model('products', productsSchema);
+const Order_Details = mongoose.model('order-details', order_detailsSchema);
+const Order = mongoose.model('orders',orderSchema);
 
 async function FindContactByName(ContactName) {
     return await Customer.findOne({ ContactName: ContactName });
@@ -86,6 +110,19 @@ async function GetProducts() {
     return await Product.find();
 }
 
+async function GetOrders(username) {
+    var userID=await Customer.find({ContactName:username}).select('CustomerID');
+    var orders=await Order.find({CustomerID:userID});
+    console.log(orders);
+
+    var order_details=[];
+    for (let order of orders) {
+        order_details.push(Order_Details.find({OrderID:order.OrderID}).populate('product'));
+    }
+    
+    return await Order_Details.find().populate('product');
+}
+
 app.use(express.static(path.join(__dirname, 'dist/meanproject')));
 app.use(bodyParser.json());
 app.use(cors());
@@ -118,17 +155,30 @@ app.post('/login', (req, res) => {
     });
 
     if (req.body.ContactName == 'admin' && req.body.Password == 'admin') {
+        res.cookie('accountUserName', 'admin');
+        res.cookie('role', 'admin');
         res.send({ role: 'admin' });
     }
     else {
         Login(req.body).then((data) => {
             if (data == true) {
                 res.cookie('accountUserName', req.body.ContactName);
+                res.cookie('role', 'user');
                 res.send({ role: 'user' });
             }
         });
     }
 });
+
+app.get('/getOrders', (req, res) => {
+    res.set({
+        'Content-Type': 'text/json',
+        'Access-Control-Allow-Origin': '*'
+    });
+    GetOrders(req.body.username).then(data => {
+        res.send(data);
+    })
+})
 
 app.get('*', (req, res) => {
     res.set({
