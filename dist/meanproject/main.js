@@ -96,7 +96,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<app-navbar></app-navbar>\n\n<router-outlet></router-outlet>\n"
+module.exports = "<app-navbar></app-navbar>\r\n\r\n<router-outlet></router-outlet>\r\n"
 
 /***/ }),
 
@@ -157,6 +157,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _details_product_details_product_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./details-product/details-product.component */ "./src/app/details-product/details-product.component.ts");
 /* harmony import */ var _cart_cart_component__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./cart/cart.component */ "./src/app/cart/cart.component.ts");
 /* harmony import */ var _orders_orders_component__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./orders/orders.component */ "./src/app/orders/orders.component.ts");
+/* harmony import */ var ngx_pagination__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ngx-pagination */ "./node_modules/ngx-pagination/dist/ngx-pagination.js");
 
 
 
@@ -192,7 +193,8 @@ var AppModule = /** @class */ (function () {
                 _app_routing_module__WEBPACK_IMPORTED_MODULE_4__["AppRoutingModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_9__["ReactiveFormsModule"],
                 _angular_forms__WEBPACK_IMPORTED_MODULE_9__["FormsModule"],
-                _angular_common_http__WEBPACK_IMPORTED_MODULE_10__["HttpClientModule"]
+                _angular_common_http__WEBPACK_IMPORTED_MODULE_10__["HttpClientModule"],
+                ngx_pagination__WEBPACK_IMPORTED_MODULE_14__["NgxPaginationModule"]
             ],
             providers: [ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"]],
             bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"]]
@@ -223,7 +225,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\r\n<div class=\"row\">\r\n  <table class=\"table table-hover\">\r\n   <thead>\r\n     <tr>\r\n      \r\n     <th>Product Name</th>\r\n     <th>Product Price</th>\r\n     <th>Product Quantity</th>\r\n     <th>TotalProductPrice</th>\r\n    </tr>\r\n   </thead>\r\n   <tbody>\r\n     <tr *ngFor=\"let prd of ProductsCart;index as i \">\r\n      <td>{{prd.productName}}</td>\r\n      <td>{{prd.UnitPrice}}</td>\r\n      <td>{{prd.quantity}}</td>\r\n      <td>{{prd.TotalPrice}}</td>\r\n      <td><input type=\"button\" value=\"Edit\" class=\"btn btn-success\"></td>    \r\n      <td><input type=\"button\" value=\"Delete\" class=\"btn btn-danger\" (click)=\"DeleteFromCart(i)\"></td>    \r\n     </tr>\r\n     \r\n   </tbody>\r\n\r\n  </table>\r\n  <input type=\"button\" value=\"Checkout\" class=\"btn btn-primary\">\r\n</div>\r\n</div>\r\n"
+module.exports = "<div class=\"container\">\n<div class=\"row\">\n  <table class=\"table table-hover\">\n   <thead>\n     <tr>\n      \n     <th>Product Name</th>\n     <th>Product Price</th>\n     <th>Product Quantity</th>\n     <th>TotalProductPrice</th>\n    </tr>\n   </thead>\n   <tbody>\n     <tr *ngFor=\"let prd of ProductsCart;index as i \">\n      <td>{{prd.productName}}</td>\n      <td>{{prd.UnitPrice}}</td>\n      <td>\n          <span [hidden]=\"f==i\">{{prd.quantity}}</span>\n          <input type=\"text\" *ngIf=\"f==i\" [(ngModel)]='prd.quantity' #txt (change)='Update(txt.value,i)'>\n          <div *ngIf=!valid>\n            <span class=\"alert alert-danger\">Invalid Quantity</span>\n          </div>\n\n      </td>\n      <td>{{prd.TotalPrice}}</td>\n      <td><input type=\"button\" value=\"Edit\" class=\"btn btn-success\" (click)=\"updateField(i)\"></td>    \n      <td><input type=\"button\" value=\"Delete\" class=\"btn btn-danger\" (click)=\"DeleteFromCart(i)\"></td>    \n     </tr>\n     \n   </tbody>\n\n  </table>\n  <input type=\"button\" value=\"Checkout\" class=\"btn btn-primary\" (click)=\"Checkout()\">\n</div>\n</div>\n"
 
 /***/ }),
 
@@ -240,15 +242,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/index.js");
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+
 
 
 
 var CartComponent = /** @class */ (function () {
-    function CartComponent(cookie) {
+    function CartComponent(cookie, http) {
         this.cookie = cookie;
+        this.http = http;
         this.ProductsCart = [];
+        this.f = -1;
         this.ProductsCart = JSON.parse(this.cookie.get("productsID"));
     }
+    CartComponent.prototype.Update = function (quant, index) {
+        this.oldQuantity = this.ProductsCart[index].quantity;
+        if (Number(quant) <= this.ProductsCart[index].UnitsInStock) {
+            this.ProductsCart[index].quantity = quant;
+            this.cookie.set("productsID", JSON.stringify(this.ProductsCart));
+            console.log(this.ProductsCart[index].quantity);
+            this.valid = true;
+        }
+        else {
+            this.valid = false;
+            // this.ProductsCart[index].quantity=this.oldQuantity;
+            console.log(this.ProductsCart[index].quantity);
+        }
+        this.f = -1;
+    };
+    CartComponent.prototype.updateField = function (index) {
+        this.oldQuantity = this.ProductsCart[index].quantity;
+        this.f = index;
+    };
     CartComponent.prototype.DeleteFromCart = function (index) {
         console.log(this.ProductsCart);
         console.log(index);
@@ -258,8 +283,25 @@ var CartComponent = /** @class */ (function () {
         this.cookie.set("productsID", JSON.stringify(this.ProductsCart));
         console.log(JSON.parse(this.cookie.get("productsID")));
     };
+    CartComponent.prototype.Checkout = function () {
+        console.log("checkout");
+        console.log(this.cookie.get("accountUserName"));
+        if (this.cookie.get("accountUserName") != " ") {
+            console.log(this.cookie.get("accountUserName").toString());
+            this.http.post('http://127.0.0.1:7000/checkout', {
+                ProductsCart: this.ProductsCart
+            }).toPromise()
+                .then(function () {
+                console.log("done");
+            })
+                .catch(function (error) {
+                console.log(error);
+            });
+        }
+    };
     CartComponent.prototype.ngOnInit = function () {
         console.log(JSON.parse(this.cookie.get("productsID")));
+        this.valid = true;
     };
     CartComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -267,7 +309,7 @@ var CartComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./cart.component.html */ "./src/app/cart/cart.component.html"),
             styles: [__webpack_require__(/*! ./cart.component.css */ "./src/app/cart/cart.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_cookie_service__WEBPACK_IMPORTED_MODULE_2__["CookieService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [ngx_cookie_service__WEBPACK_IMPORTED_MODULE_2__["CookieService"], _angular_common_http__WEBPACK_IMPORTED_MODULE_3__["HttpClient"]])
     ], CartComponent);
     return CartComponent;
 }());
@@ -294,7 +336,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row bg-warning\">\r\n  <div class=\"thumbnail bg-dark center col-6\">\r\n    <p class=\"center text-white\">\"ProductName: {{ProductName}}</p>\r\n    <p class=\"center text-white\">\"ProductPrice: \"{{UnitPrice}}</p>\r\n    <input pattern=\"[0-9]+\" ngModel #quantityModel=\"ngModel\" type=\"text\" placeholder=\"product quantity\" #quantity>\r\n    <div class=\"alert alert-danger\" *ngIf=\"quantityModel.touched && !quantityModel.valid\">\r\n      <div *ngIf=\"quantityModel.errors.pattern\">ProductQuantity doesn't match the pattern</div>\r\n    </div>\r\n    <div *ngIf=\"quantityModel.valid\">\r\n      <div *ngIf=!valid>\r\n        <div class=\"alert alert-danger\">\r\n        Invalid Quantity\r\n        </div>\r\n      </div>\r\n    <input type=\"button\" value=\"AddToCart\" class=\"btn btn-success\" (click)=\"AddToCart(quantity.value)\">\r\n    </div>\r\n    </div>\r\n\r\n  </div>"
+module.exports = "<div class=\"row bg-warning\">\n  <div class=\"thumbnail bg-dark center col-6\">\n    <p class=\"center text-white\">\"ProductName: {{ProductName}}</p>\n    <p class=\"center text-white\">\"ProductPrice: \"{{UnitPrice}}</p>\n    <input pattern=\"[0-9]+\" ngModel #quantityModel=\"ngModel\" type=\"text\" placeholder=\"product quantity\" #quantity>\n    <div class=\"alert alert-danger\" *ngIf=\"quantityModel.touched && !quantityModel.valid\">\n      <div *ngIf=\"quantityModel.errors.pattern\">ProductQuantity doesn't match the pattern</div>\n    </div>\n    <div *ngIf=\"quantityModel.valid\">\n      <div *ngIf=!valid>\n        <div class=\"alert alert-danger\">\n        Invalid Quantity\n        </div>\n      </div>\n    <input type=\"button\" value=\"AddToCart\" class=\"btn btn-success\" (click)=\"AddToCart(quantity.value)\">\n    </div>\n    </div>\n\n  </div>"
 
 /***/ }),
 
@@ -407,7 +449,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<form method=\"POST\" action=\"index.html\" #f=\"ngForm\" class=\"needs-validation col-6\"\n  (ngSubmit)=\"onSubmit(f,ContactName.value,Password.value)\"\n  novalidate>\n\n  <div class=\"form-group\">\n    <label for=\"ContactName\">ContactName</label>\n    <input required minlength=\"5\" maxlength=\"15\" pattern=\"[a-zA-Z]+\" ngModel #ContactNameModel=\"ngModel\" type=\"text\"\n      name=\"ContactName\" class=\"form-control\" #ContactName class=\"form-control\" style=\"width:50%\">\n    <span class=\"invalid-feedback\">please fill out this field</span>\n    <div class=\"alert alert-danger\" *ngIf=\"ContactNameModel.touched && !ContactNameModel.valid\">\n      <div *ngIf=\"ContactNameModel.errors.required\">ContactName is required</div>\n      <div *ngIf=\"ContactNameModel.errors.minLength\">ContactName should be minLength\n        {{ContactNameModel.errors.minLength.requiredLength}}</div>\n      <div *ngIf=\"ContactNameModel.errors.pattern\">\"ContactName doesn't match the pattern\"</div>\n    </div>\n  </div>\n\n  <div class=\"form-group\">\n    <label for=\"Password\">Password</label>\n    <input required minlength=\"5\" maxlength=\"15\" pattern=\"[a-zA-Z0-9]+\" ngModel #PasswordModel=\"ngModel\" type=\"text\"\n      name=\"Password\" class=\"form-control\" #Password class=\"form-control\" style=\"width:50%\">\n    <span class=\"invalid-feedback\">please fill out this field</span>\n    <div class=\"alert alert-danger\" *ngIf=\"PasswordModel.touched && !PasswordModel.valid\">\n      <div *ngIf=\"PasswordModel.errors.required\">Password is required</div>\n      <div *ngIf=\"PasswordModel.errors.minLength\">Password should be minLength\n        {{PasswordModel.errors.minLength.requiredLength}}</div>\n      <div *ngIf=\"PasswordModel.errors.pattern\">\"Password doesn't match the pattern\"</div>\n    </div>\n  </div>\n\n  <input type=\"submit\" value=\"login\" class=\"btn btn-primary\">\n</form>"
+module.exports = "<form method=\"POST\" action=\"index.html\" #f=\"ngForm\" class=\"needs-validation col-6\"\r\n  (ngSubmit)=\"onSubmit(f,ContactName.value,Password.value)\"\r\n  novalidate>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"ContactName\">ContactName</label>\r\n    <input required minlength=\"5\" maxlength=\"15\" pattern=\"[a-zA-Z]+\" ngModel #ContactNameModel=\"ngModel\" type=\"text\"\r\n      name=\"ContactName\" class=\"form-control\" #ContactName class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"ContactNameModel.touched && !ContactNameModel.valid\">\r\n      <div *ngIf=\"ContactNameModel.errors.required\">ContactName is required</div>\r\n      <div *ngIf=\"ContactNameModel.errors.minLength\">ContactName should be minLength\r\n        {{ContactNameModel.errors.minLength.requiredLength}}</div>\r\n      <div *ngIf=\"ContactNameModel.errors.pattern\">\"ContactName doesn't match the pattern\"</div>\r\n    </div>\r\n  </div>\r\n\r\n  <div class=\"form-group\">\r\n    <label for=\"Password\">Password</label>\r\n    <input required minlength=\"5\" maxlength=\"15\" pattern=\"[a-zA-Z0-9]+\" ngModel #PasswordModel=\"ngModel\" type=\"text\"\r\n      name=\"Password\" class=\"form-control\" #Password class=\"form-control\" style=\"width:50%\">\r\n    <span class=\"invalid-feedback\">please fill out this field</span>\r\n    <div class=\"alert alert-danger\" *ngIf=\"PasswordModel.touched && !PasswordModel.valid\">\r\n      <div *ngIf=\"PasswordModel.errors.required\">Password is required</div>\r\n      <div *ngIf=\"PasswordModel.errors.minLength\">Password should be minLength\r\n        {{PasswordModel.errors.minLength.requiredLength}}</div>\r\n      <div *ngIf=\"PasswordModel.errors.pattern\">\"Password doesn't match the pattern\"</div>\r\n    </div>\r\n  </div>\r\n\r\n  <input type=\"submit\" value=\"login\" class=\"btn btn-primary\">\r\n</form>"
 
 /***/ }),
 
@@ -634,7 +676,31 @@ var ProductsComponent = /** @class */ (function () {
     function ProductsComponent(http, cookie) {
         this.http = http;
         this.cookie = cookie;
+        this.f = -1;
+        this.p = 1;
     }
+    ProductsComponent.prototype.DeleteProductByAdmin = function (index) {
+        console.log(this.products[index]);
+        console.log(this.products[index].ProductID);
+        this.http.post('http://127.0.0.1:7000/deleteProduct', {
+            productid: this.products[index].ProductID
+        }).subscribe(function (data) {
+        });
+        this.products.splice(index, 1);
+    };
+    ProductsComponent.prototype.UpdateProductByAdmin = function (price, units, index) {
+        this.products[index].UnitPrice = price;
+        this.products[index].UnitsInStock = units;
+        this.f = -1;
+        /* this.http.post('http://127.0.0.1:7000/updateProduct',{
+          Productid:this.products[index].ProductID,
+          ProductPrice: this.products[index].UnitPrice,
+          productQuantity:this.products[index].UnitsInStock
+        })*/
+    };
+    ProductsComponent.prototype.updateField = function (index) {
+        this.f = index;
+    };
     ProductsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.cookie.get('role') == 'admin' ? this.IsUser = false : this.IsUser = true;
@@ -804,7 +870,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\ahmedmohsen\Desktop\MEAN stack project\meanproject\src\main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! E:\iti\ITI\NodeJs\MEANproject\MEANproject\src\main.ts */"./src/main.ts");
 
 
 /***/ })

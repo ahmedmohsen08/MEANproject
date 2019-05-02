@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 
-mongoose.connect('mongodb://localhost:27017/NorthwindDB', { useNewUrlParser: true })
+mongoose.connect('mongodb://localhost:27017/Northwind', { useNewUrlParser: true })
     .then(() => console.log('connected'))
     .catch(() => console.log("not connected"))
 
@@ -29,11 +29,11 @@ const customersSchema = new mongoose.Schema({
 });
 
 const productsSchema = new mongoose.Schema({
-    ProductID: String,
+    ProductID: Number,
     ProductName: String,
-    CategoryID: String,
-    UnitPrice: String,
-    UnitsInStock: String,
+    CategoryID: Number,
+    UnitPrice: Number,
+    UnitsInStock: Number,
     UnitsOnOrder: String
 });
 
@@ -53,16 +53,16 @@ order_detailsSchema.virtual('product', {
 });
 
 const orderSchema = new mongoose.Schema({
-    OrderID:String,
-    CustomerID:String,
-    OrderDate:String,
-    ShipAddress:String
+    OrderID: String,
+    CustomerID: String,
+    OrderDate: String,
+    ShipAddress: String
 });
 
 const Customer = mongoose.model('customers', customersSchema);
 const Product = mongoose.model('products', productsSchema);
 const Order_Details = mongoose.model('order-details', order_detailsSchema);
-const Order = mongoose.model('orders',orderSchema);
+const Order = mongoose.model('orders', orderSchema);
 
 async function FindContactByName(ContactName) {
     return await Customer.findOne({ ContactName: ContactName });
@@ -111,22 +111,37 @@ async function GetProducts() {
 }
 
 async function GetOrders(username) {
-    var userID=await Customer.find({ContactName:username}).select('CustomerID');
-    var orders=await Order.find({CustomerID:userID});
+    var userID = await Customer.find({ ContactName: username }).select('CustomerID');
+    var orders = await Order.find({ CustomerID: userID });
     console.log(orders);
 
-    var order_details=[];
+    var order_details = [];
     for (let order of orders) {
-        order_details.push(Order_Details.find({OrderID:order.OrderID}).populate('product'));
+        order_details.push(Order_Details.find({ OrderID: order.OrderID }).populate('product'));
     }
-    
+
     return await Order_Details.find().populate('product');
 }
+
+async function DeleteproductByAdmin(prodID) {
+    var res = Product.deleteOne({ ProductID: prodID }, (err) => {
+        console.log("error: " + err);
+    })
+}
+
+async function UpdateproductByAdmin(prodID) {
+    var res = Product.updateOne({ ProductID: prodID }, (err) => {
+        console.log(err);
+    })
+
+}
+
 
 app.use(express.static(path.join(__dirname, 'dist/meanproject')));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(cookieParser());
+
 
 app.get('/getAllProducts', (req, res) => {
     //console.log(req);
@@ -153,7 +168,6 @@ app.post('/login', (req, res) => {
         'Content-Type': 'text/json',
         'Access-Control-Allow-Origin': '*'
     });
-
     if (req.body.ContactName == 'admin' && req.body.Password == 'admin') {
         res.cookie('accountUserName', 'admin');
         res.cookie('role', 'admin');
@@ -161,9 +175,13 @@ app.post('/login', (req, res) => {
     }
     else {
         Login(req.body).then((data) => {
+            console.log("login " + data);
+
             if (data == true) {
+                console.log("login2");
                 res.cookie('accountUserName', req.body.ContactName);
                 res.cookie('role', 'user');
+                console.log(req.body.ContactName);
                 res.send({ role: 'user' });
             }
         });
@@ -178,6 +196,18 @@ app.get('/getOrders', (req, res) => {
     GetOrders(req.body.username).then(data => {
         res.send(data);
     })
+});
+
+app.post('/checkout', (req, res) => {
+    console.log(req.body);
+
+})
+
+app.post('/deleteProduct', (req, res) => {
+    console.log("aaaaaaaaaaaa");
+    console.log(req.body);
+    DeleteproductByAdmin(req.body.productid)
+    res.send({ deleted: true });
 })
 
 app.get('*', (req, res) => {

@@ -9,7 +9,10 @@
         </a>
       </div>
     </div>
+
   </div>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+
 </div>
 
 <div *ngIf="cookie.get('role')=='admin'">

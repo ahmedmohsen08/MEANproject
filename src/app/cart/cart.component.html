@@ -14,15 +14,22 @@
      <tr *ngFor="let prd of ProductsCart;index as i ">
       <td>{{prd.productName}}</td>
       <td>{{prd.UnitPrice}}</td>
-      <td>{{prd.quantity}}</td>
+      <td>
+          <span [hidden]="f==i">{{prd.quantity}}</span>
+          <input type="text" *ngIf="f==i" [(ngModel)]='prd.quantity' #txt (change)='Update(txt.value,i)'>
+          <div *ngIf=!valid>
+            <span class="alert alert-danger">Invalid Quantity</span>
+          </div>
+
+      </td>
       <td>{{prd.TotalPrice}}</td>
-      <td><input type="button" value="Edit" class="btn btn-success"></td>    
+      <td><input type="button" value="Edit" class="btn btn-success" (click)="updateField(i)"></td>    
       <td><input type="button" value="Delete" class="btn btn-danger" (click)="DeleteFromCart(i)"></td>    
      </tr>
      
    </tbody>
 
   </table>
-  <input type="button" value="Checkout" class="btn btn-primary">
+  <input type="button" value="Checkout" class="btn btn-primary" (click)="Checkout()">
 </div>
 </div>
