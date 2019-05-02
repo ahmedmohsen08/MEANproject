@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 
-mongoose.connect('mongodb://localhost:27017/NorthwindDB', { useNewUrlParser: true })
+mongoose.connect('mongodb://localhost:27017/Northwind', { useNewUrlParser: true })
     .then(() => console.log('connected'))
     .catch(() => console.log("not connected"))
 
@@ -29,16 +29,24 @@ const customersSchema = new mongoose.Schema({
 });
 
 const productsSchema = new mongoose.Schema({
-    ProductID: String,
+    ProductID: Number,
     ProductName: String,
-    CategoryID: String,
-    UnitPrice: String,
-    UnitsInStock: String,
+    CategoryID: Number,
+    UnitPrice: Number,
+    UnitsInStock: Number,
     UnitsOnOrder: String
+})
+const OrdersSchema=new mongoose.Schema({
+
+    OrderID :String,
+    CustomerID :String,
+    OrderDate :String,
+    ShipAddress :String
 })
 
 const Customer = mongoose.model('customers', customersSchema);
 const Product = mongoose.model('product', productsSchema);
+const Order=mongoose.model('orders',OrdersSchema);
 
 async function FindContactByName(ContactName) {
     return await Customer.findOne({ ContactName: ContactName });
@@ -86,10 +94,25 @@ async function GetProducts() {
     return await Product.find();
 }
 
+async function DeleteproductByAdmin(prodID){
+  var res=Product.deleteOne({ProductID:prodID},(err)=>{
+        console.log("error: "+err);
+    })
+}
+
+async function UpdateproductByAdmin(prodID){
+   var res= Product.updateOne({ProductID:prodID},(err)=>{
+        console.log(err);
+    })
+
+}
+
+
 app.use(express.static(path.join(__dirname, 'dist/meanproject')));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(cookieParser());
+
 
 app.get('/getAllProducts', (req, res) => {
     //console.log(req);
@@ -116,19 +139,35 @@ app.post('/login', (req, res) => {
         'Content-Type': 'text/json',
         'Access-Control-Allow-Origin': '*'
     });
-
     if (req.body.ContactName == 'admin' && req.body.Password == 'admin') {
         res.send({ role: 'admin' });
     }
     else {
         Login(req.body).then((data) => {
+            console.log("login "+data);
+
             if (data == true) {
+                console.log("login2");
                 res.cookie('accountUserName', req.body.ContactName);
+                console.log(req.body.ContactName);
                 res.send({ role: 'user' });
             }
         });
     }
 });
+
+
+app.post('/checkout',(req,res)=>{
+console.log(req.body);
+
+})
+
+app.post('/deleteProduct',(req,res)=>{
+    console.log("aaaaaaaaaaaa");
+    console.log(req.body);
+   DeleteproductByAdmin(req.body.productid)
+   res.send({deleted:true});
+})
 
 app.get('*', (req, res) => {
     res.set({

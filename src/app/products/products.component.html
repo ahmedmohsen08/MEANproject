@@ -1,7 +1,7 @@
 
 <div *ngIf="IsUser;else admin">
 <div class="row bg-warning">
-    <div class="col-2 " *ngFor="let product of products">
+    <div class="col-2 " *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: p }">
       <div  class="thumbnail bg-dark">
       <a class="text-white" [routerLink]="['/details-product',product.ProductID,product.ProductName,product.UnitPrice,product.UnitsInStock]">
           <p class=" center">"ProductName: "{{product.ProductName}}</p>
@@ -9,10 +9,48 @@
       </a>
       </div>
     </div>
+
   </div>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+
 </div>
 
+
 <ng-template #admin>
+  
+<div class="container">
+    <button class="btn btn-primary" data-toggle="modal" data-target="#modal">Add new Product</button>
+        <div  id="modal" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-body">
+  
+                      <form >
+                        <div class="form-group">
+                            <label  for="ProductName">ProductName:</label>
+                            <input type="text" placeholder="enter your ProductName" id="ProductName" class="form-control" #ProductName > 
+                        </div>
+                        <div class="form-group">
+                            <label for="ProductPrice">ProductPrice:</label>
+                            <input id="ProductPrice" type="text" placeholder="enter your ProductPrice" class="form-control" #ProductPrice >
+                        </div>
+                        <div class="form-group">
+                            <label for="UnitsInStock">UnitsInStock:</label>
+                            <input id="UnitsInStock" type="text" placeholder="enter your UnitsInStock" class="form-control" #UnitsInStock >
+                        </div>
+                      </form>
+  
+                    </div>
+                    
+                    <div class="modal-footer">
+                      <button type="button"id="save" class="btn btn-primary" data-dismiss="modal" (click)="setArr()">save </button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+  
+                  </div>
+                </div>
+              </div>
+  </div>
     <table class="table table-dark table-hover">
         <thead>
             <tr>
@@ -23,18 +61,27 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let product of products">
+            <tr *ngFor="let product of products| paginate: { itemsPerPage: 8, currentPage: p };index as i">
       
               <td>{{product.ProductID}}</td>
               <td>{{product.ProductName}}</td>
-              <td>{{product.UnitPrice}}</td>
-              <td>{{product.UnitsInStock}}</td>
-              <td><input type="button" value="Delete" class="btn btn-danger"></td>
-              <td><input type="button" value="Edit" class="btn btn-success"></td>
+              <td>
+                  <span [hidden]="f==i">{{product.UnitPrice}}</span>
+                  <input type="text" *ngIf="f==i" [(ngModel)]='product.UnitPrice' #txtPrice>
+
+              </td>
+
+              <td>
+                  <span [hidden]="f==i">{{product.UnitsInStock}}</span>
+                  <input type="text" *ngIf="f==i" [(ngModel)]='product.UnitsInStock' #txtUnits> 
+              </td>
+              <td><input type="button" value="Delete" class="btn btn-danger" (click)="DeleteProductByAdmin(i)"></td>
+              <td><input type="button" value="Edit" class="btn btn-success" (click)="updateField(i)"></td>
             </tr>
       
         </tbody>
       </table>
-</ng-template>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
 
+</ng-template>
 
