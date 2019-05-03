@@ -1,3 +1,27 @@
-<p>
-  orders works!
-</p>
+<div>
+  <table class="table table-dark table-hover">
+    <thead>
+      <tr>
+        <th>OrderID</th>
+        <th>Products</th>
+        <th>Order Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{order.orderID}}</td>
+
+        <td>
+          <tr *ngFor="let product of order.products">
+            <td>{{product.product.ProductName}}</td>
+            <td>Quantity: {{product.Quantity}}</td>
+            <td>Price: {{product.UnitPrice}}</td>
+          </tr>
+        </td>
+
+        <td>{{order.OrderDate | date:'longDate'}}</td>
+        <td><input type="button" value="Reorder" class="btn btn-info" ></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

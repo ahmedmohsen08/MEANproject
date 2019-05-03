@@ -365,7 +365,7 @@ var DetailsProductComponent = /** @class */ (function () {
         this.cookie = cookie;
         this.productsID = [];
         //this.cookie.delete("productsID")
-        // this.cookie.set("productsID",JSON.stringify(this.productsID));
+        //this.cookie.set("productsID",JSON.stringify(this.productsID));
     }
     DetailsProductComponent.prototype.AddToCart = function (ProdQuantity) {
         var _this = this;
@@ -587,7 +587,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  orders works!\n</p>\n"
+module.exports = "<div>\n  <table class=\"table table-dark table-hover\">\n    <thead>\n      <tr>\n        <th>OrderID</th>\n        <th>Products</th>\n        <th>Order Date</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let order of orders\">\n        <td>{{order.orderID}}</td>\n\n        <td>\n          <tr *ngFor=\"let product of order.products\">\n            <td>{{product.product.ProductName}}</td>\n            <td>Quantity: {{product.Quantity}}</td>\n            <td>Price: {{product.UnitPrice}}</td>\n          </tr>\n        </td>\n\n        <td>{{order.OrderDate | date:'longDate'}}</td>\n        <td><input type=\"button\" value=\"Reorder\" class=\"btn btn-info\" ></td>\n      </tr>\n    </tbody>\n  </table>\n</div>"
 
 /***/ }),
 
@@ -604,18 +604,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/index.js");
+
 
 
 
 var OrdersComponent = /** @class */ (function () {
-    function OrdersComponent(http) {
+    function OrdersComponent(http, cookie) {
         this.http = http;
+        this.cookie = cookie;
     }
     OrdersComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.http.get('http://127.0.0.1:7000/getOrders', { params: { username: 'FRANS' } }).subscribe(function (result) {
-            _this.orders = result;
-            console.log(_this.orders);
+        this.http.post('http://127.0.0.1:7000/getOrders', { username: "Paul Henriot" } /*{username:this.cookie.get('accountUserName')}*/).subscribe(function (data) {
+            _this.orders = data;
+            //console.log(this.orders);
+            for (var _i = 0, _a = _this.orders; _i < _a.length; _i++) {
+                var i = _a[_i];
+                console.log(i);
+            }
         });
     };
     OrdersComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -624,7 +631,7 @@ var OrdersComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./orders.component.html */ "./src/app/orders/orders.component.html"),
             styles: [__webpack_require__(/*! ./orders.component.css */ "./src/app/orders/orders.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"]])
     ], OrdersComponent);
     return OrdersComponent;
 }());

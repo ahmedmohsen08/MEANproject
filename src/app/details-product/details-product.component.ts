@@ -17,7 +17,7 @@ export class DetailsProductComponent implements OnInit {
   valid;
   constructor(private route:ActivatedRoute,private cookie:CookieService) {
    //this.cookie.delete("productsID")
-  // this.cookie.set("productsID",JSON.stringify(this.productsID));
+    //this.cookie.set("productsID",JSON.stringify(this.productsID));
    }
   AddToCart(ProdQuantity)
   {
