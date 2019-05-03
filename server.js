@@ -130,11 +130,12 @@ async function DeleteproductByAdmin(prodID) {
         console.log("error: " + err);
     })
 }
-
-async function UpdateproductByAdmin(prodID) {
-    var res = Product.updateOne({ ProductID: prodID }, (err) => {
-        console.log(err);
-    })
+mongoose.set('useFindAndModify', false);
+async function UpdateproductByAdmin(pID,pname,pPrice,pUnits) {
+    var res = Product.findOneAndUpdate({ ProductID: pID },{ProductName:pname,UnitPrice:pPrice,UnitsInStock:pUnits},
+        (err,doc)=>{console.log(doc)}
+  )
+    
 
 }
 
@@ -174,6 +175,7 @@ app.post('/login', (req, res) => {
         res.cookie('accountUserName', 'admin');
         res.cookie('role', 'admin');
         res.send({ role: 'admin' });
+        console.log(req.cookies);
     }
     else {
         Login(req.body).then((data) => {
@@ -184,7 +186,9 @@ app.post('/login', (req, res) => {
                 res.cookie('accountUserName', req.body.ContactName);
                 res.cookie('role', 'user');
                 console.log(req.body.ContactName);
-                res.send({ role: 'user' });
+               res.send({ role: 'user' });
+               console.log(req.cookies);
+
             }
         });
     }
@@ -212,6 +216,13 @@ app.post('/deleteProduct', (req, res) => {
     res.send({ deleted: true });
 })
 
+app.post('/updateProduct', (req, res) => {
+    console.log(req.body);
+
+    UpdateproductByAdmin(req.body.productID,req.body.productName,req.body.UnitPrice,req.body.UnitsInStock);
+    res.send({update:true});
+    
+})
 app.get('*', (req, res) => {
     res.set({
         'Content-Type': 'text/json',

@@ -287,18 +287,23 @@ var CartComponent = /** @class */ (function () {
     CartComponent.prototype.Checkout = function () {
         console.log("checkout");
         console.log(this.cookie.get("accountUserName"));
-        if (this.cookie.get("accountUserName") != " ") {
-            console.log(this.cookie.get("accountUserName").toString());
-            this.http.post('http://127.0.0.1:7000/checkout', {
-                ProductsCart: this.ProductsCart
-            }).toPromise()
-                .then(function () {
-                console.log("done");
-            })
-                .catch(function (error) {
-                console.log(error);
-            });
-        }
+        if (this.cookie.get("accountUserName") == "")
+            console.log("cookie");
+        /* if(this.cookie.get("accountUserName")!="")
+         {
+           console.log(this.cookie.get("accountUserName").toString())
+           this.http.post('http://127.0.0.1:7000/checkout',
+           {
+            ProductsCart:this.ProductsCart
+           }).toPromise()
+           .then(()=>{
+             console.log("done");
+           })
+           .catch(error => {
+             console.log(error);
+           });
+         }
+      */
     };
     CartComponent.prototype.ngOnInit = function () {
         console.log(JSON.parse(this.cookie.get("productsID")));
@@ -372,33 +377,38 @@ var DetailsProductComponent = /** @class */ (function () {
         console.log(this.UnitsInStock);
         console.log(ProdQuantity);
         if ((Number(ProdQuantity) > 0) && (Number(ProdQuantity) <= Number(this.UnitsInStock))) {
-            this.productsID = JSON.parse(this.cookie.get("productsID"));
-            console.log(this.productsID);
-            console.log(this.productsID.length);
-            var index = this.productsID.findIndex(function (p) { return p.productid == _this.ProductID; });
-            if (index != -1) {
-                var obj = this.productsID[index];
-                var NewQuant = Number(obj.quantity) + Number(ProdQuantity);
-                if (NewQuant <= Number(this.UnitsInStock)) {
-                    this.valid = true;
-                    var NewTotalPrice = (NewQuant * obj.UnitPrice);
-                    this.productsID[index] = { "productid": this.ProductID, "productName": this.ProductName, "quantity": NewQuant, "UnitPrice": Number(this.UnitPrice), "TotalPrice": NewTotalPrice, "UnitsInStock": this.UnitsInStock };
-                    console.log(this.productsID[index]);
-                }
-                else {
-                    console.log("invalid quantity");
-                    this.valid = false;
-                    //3yza atl3 prompt t2olo elquantity invalid
-                }
-            }
-            else {
+            if (this.cookie.get("productsID") == "") {
                 this.valid = true;
-                var newQ = Number(this.UnitPrice) * Number(ProdQuantity);
+                this.cookie.set("productsID", JSON.stringify(this.productsID));
                 this.productsID.push({ "productid": this.ProductID, "productName": this.ProductName, "quantity": Number(ProdQuantity), "UnitPrice": Number(this.UnitPrice), "TotalPrice": newQ, "UnitsInStock": this.UnitsInStock });
             }
-            this.cookie.set("productsID", JSON.stringify(this.productsID));
-            console.log(JSON.parse(this.cookie.get("productsID")));
-            console.log("valid");
+            else {
+                this.productsID = JSON.parse(this.cookie.get("productsID"));
+                var index = this.productsID.findIndex(function (p) { return p.productid == _this.ProductID; });
+                if (index != -1) {
+                    var obj = this.productsID[index];
+                    var NewQuant = Number(obj.quantity) + Number(ProdQuantity);
+                    if (NewQuant <= Number(this.UnitsInStock)) {
+                        this.valid = true;
+                        var NewTotalPrice = (NewQuant * obj.UnitPrice);
+                        this.productsID[index] = { "productid": this.ProductID, "productName": this.ProductName, "quantity": NewQuant, "UnitPrice": Number(this.UnitPrice), "TotalPrice": NewTotalPrice, "UnitsInStock": this.UnitsInStock };
+                        console.log(this.productsID[index]);
+                    }
+                    else {
+                        console.log("invalid quantity");
+                        this.valid = false;
+                        //3yza atl3 prompt t2olo elquantity invalid
+                    }
+                }
+                else {
+                    this.valid = true;
+                    var newQ = Number(this.UnitPrice) * Number(ProdQuantity);
+                    this.productsID.push({ "productid": this.ProductID, "productName": this.ProductName, "quantity": Number(ProdQuantity), "UnitPrice": Number(this.UnitPrice), "TotalPrice": newQ, "UnitsInStock": this.UnitsInStock });
+                }
+                this.cookie.set("productsID", JSON.stringify(this.productsID));
+                console.log(JSON.parse(this.cookie.get("productsID")));
+                console.log("valid");
+            }
         }
         else {
             console.log("invalid");
@@ -618,11 +628,6 @@ var OrdersComponent = /** @class */ (function () {
         var _this = this;
         this.http.post('http://127.0.0.1:7000/getOrders', { username: "Paul Henriot" } /*{username:this.cookie.get('accountUserName')}*/).subscribe(function (data) {
             _this.orders = data;
-            //console.log(this.orders);
-            for (var _i = 0, _a = _this.orders; _i < _a.length; _i++) {
-                var i = _a[_i];
-                console.log(i);
-            }
         });
     };
     OrdersComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -658,7 +663,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"cookie.get('role')=='user'\">\r\n  <div class=\"row bg-warning\">\r\n    <div class=\"col-2 \" *ngFor=\"let product of products\">\r\n      <div class=\"thumbnail bg-dark\">\r\n        <a class=\"text-white\"\r\n          [routerLink]=\"['/details-product',product.ProductID,product.ProductName,product.UnitPrice,product.UnitsInStock]\">\r\n          <p class=\" center\">\"ProductName: \"{{product.ProductName}}</p>\r\n          <p class=\" center\">\"ProductPrice: \"{{product.UnitPrice}}</p>\r\n        </a>\r\n      </div>\r\n    </div>\r\n\r\n  </div>\r\n  <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>\r\n\r\n</div>\r\n\r\n<div *ngIf=\"cookie.get('role')=='admin'\">\r\n  <table class=\"table table-dark table-hover\">\r\n    <thead>\r\n      <tr>\r\n        <th>ProductID</th>\r\n        <th>ProductName</th>\r\n        <th>ProductPrice</th>\r\n        <th>ProductQuantity</th>\r\n      </tr>\r\n    </thead>\r\n    <tbody>\r\n      <tr *ngFor=\"let product of products\">\r\n\r\n        <td>{{product.ProductID}}</td>\r\n        <td>{{product.ProductName}}</td>\r\n        <td>{{product.UnitPrice}}</td>\r\n        <td>{{product.UnitsInStock}}</td>\r\n        <td><input type=\"button\" value=\"Delete\" class=\"btn btn-danger\"></td>\r\n        <td><input type=\"button\" value=\"Edit\" class=\"btn btn-success\"></td>\r\n      </tr>\r\n\r\n    </tbody>\r\n  </table>\r\n</div>"
+module.exports = "<!--<div *ngIf=\"cookie.get('role')=='user'\">-->\r\n\r\n    <div *ngIf=true>\r\n        <div class=\"row bg-warning\">\r\n            <div class=\"col-2 \" *ngFor=\"let product of products | paginate: { itemsPerPage: 10, currentPage: p }\">\r\n              <div  class=\"thumbnail bg-dark\">\r\n              <a class=\"text-white\" [routerLink]=\"['/details-product',product.ProductID,product.ProductName,product.UnitPrice,product.UnitsInStock]\">\r\n                  <p class=\" center\">\"ProductName: \"{{product.ProductName}}</p>\r\n                  <p class=\" center\">\"ProductPrice: \"{{product.UnitPrice}}</p>\r\n              </a>\r\n              </div>\r\n            </div>\r\n        <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>      \r\n  \r\n  </div>\r\n  </div>\r\n  \r\n\r\n<!--<div *ngIf=\"cookie.get('role')=='admin'\">-->\r\n  <div *ngIf=false>\r\n  <table class=\"table table-dark table-hover\">\r\n      <thead>\r\n          <tr>\r\n            <th>ProductID</th>\r\n            <th>ProductName</th>\r\n            <th>ProductPrice</th>\r\n            <th>ProductQuantity</th>\r\n          </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let product of products| paginate: { itemsPerPage: 8, currentPage: p };index as i\">\r\n              <td>{{product.ProductID}}</td>\r\n              <td>{{product.ProductName}}</td>\r\n              <td>{{product.UnitPrice}}</td>\r\n              <td>{{product.UnitsInStock}}</td>\r\n              <td><input type=\"button\" value=\"Delete\" class=\"btn btn-danger\" (click)=\"DeleteProductByAdmin(i)\"></td>\r\n              <td><input type=\"button\" value=\"Edit\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#exampleModal\" (click)=\"updateField(i)\"></td>\r\n            </tr>\r\n\r\n        </tbody>\r\n  </table>\r\n  <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>      \r\n</div>\r\n\r\n\r\n<div  id=\"modal\" class=\"modal\" tabindex=\"-1\" role=\"dialog\">\r\n    <div class=\"modal-dialog\" role=\"document\">\r\n      <div class=\"modal-content\">\r\n        <div class=\"modal-header\">\r\n          <h5 class=\"modal-title\">Edit Product</h5>\r\n        \r\n        </div>\r\n        <div class=\"modal-body\">\r\n\r\n         \r\n        </div>\r\n        \r\n        <div class=\"modal-footer\">\r\n          <button type=\"button\"id=\"save\" class=\"btn btn-primary\" data-dismiss=\"modal\" (click)=\"setArr(pname.value,pprice.value,units.value)\">save </button>\r\n          <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\r\n        </div>\r\n\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n\r\n    <!-- Modal -->\r\n    <div class=\"modal fade\" id=\"exampleModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\r\n      <div class=\"modal-dialog\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n          <div class=\"modal-header\">\r\n            <h5 class=\"modal-title\" id=\"exampleModalLabel\">Product</h5>\r\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n              <span aria-hidden=\"true\">&times;</span>\r\n            </button>\r\n          </div>\r\n          <div class=\"modal-body\">\r\n              <form >\r\n                  <div class=\"form-group\">\r\n                      <label  for=\"ProductID\">ProductID</label>\r\n                       <label #pID>{{productID}}</label>\r\n                      </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"ProductName\">ProductName</label>\r\n                      <input id=\"ProductName\" type=\"text\" placeholder=\"enter your ProductName\" class=\"form-control\" value={{productName}} #pname >\r\n                  </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"UnitPrice\">UnitPrice</label>\r\n                      <input id=\"UnitPrice\" type=\"text\" placeholder=\"enter your UnitPrice\" class=\"form-control\" value={{productPrice}} #pprice >\r\n                  </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"UnitsInStock\">UnitsInStock</label>\r\n                      <input id=\"UnitsInStock\" type=\"text\" placeholder=\"enter your UnitsInStock\" class=\"form-control\" value={{productQuantity}} #units >\r\n                  </div>\r\n                </form>\r\n      \r\n          </div>\r\n          <div class=\"modal-footer\">\r\n            <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\r\n            <button type=\"button\" class=\"btn btn-primary\"data-dismiss=\"modal\" (click)=\"UpdateProductByAdmin(pID.innerText,pname.value,pprice.value,units.value)\">Save changes</button>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -696,24 +701,37 @@ var ProductsComponent = /** @class */ (function () {
         });
         this.products.splice(index, 1);
     };
-    ProductsComponent.prototype.UpdateProductByAdmin = function (price, units, index) {
-        this.products[index].UnitPrice = price;
-        this.products[index].UnitsInStock = units;
-        this.f = -1;
-        /* this.http.post('http://127.0.0.1:7000/updateProduct',{
-          Productid:this.products[index].ProductID,
-          ProductPrice: this.products[index].UnitPrice,
-          productQuantity:this.products[index].UnitsInStock
-        })*/
+    ProductsComponent.prototype.UpdateProductByAdmin = function (pid, pname, pprice, punits) {
+        var _this = this;
+        console.log(pid);
+        console.log(pname);
+        console.log(pprice);
+        console.log(punits);
+        this.http.post('http://127.0.0.1:7000/updateProduct', {
+            productID: pid,
+            productName: pname,
+            UnitPrice: pprice,
+            UnitsInStock: punits
+        }).subscribe(function (res) {
+            _this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
+                _this.products = result;
+            });
+        });
     };
     ProductsComponent.prototype.updateField = function (index) {
         this.f = index;
+        this.productID = this.products[index].ProductID;
+        this.productName = this.products[index].ProductName;
+        this.productPrice = this.products[index].UnitPrice;
+        this.productQuantity = this.products[index].UnitsInStock;
+        console.log(index);
     };
     ProductsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.cookie.get('role') == 'admin' ? this.IsUser = false : this.IsUser = true;
         this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
             _this.products = result;
+            console.log(_this.products);
         });
     };
     ProductsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
