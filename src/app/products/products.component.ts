@@ -10,7 +10,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class ProductsComponent implements OnInit {
   IsUser;
   products
-  f=-1;
+  updated=-1;
   p=1;
   productID;
   productName;
@@ -21,7 +21,6 @@ export class ProductsComponent implements OnInit {
   DeleteProductByAdmin(index){
    console.log(this.products[index]);
    console.log(this.products[index].ProductID);
-     
 
    this.http.post('http://127.0.0.1:7000/deleteProduct',{
      productid:this.products[index].ProductID
@@ -40,22 +39,41 @@ export class ProductsComponent implements OnInit {
     console.log(pprice);
     console.log(punits);
 
-    this.http.post('http://127.0.0.1:7000/updateProduct',{
-     productID:pid,
-     productName:pname,
-     UnitPrice:pprice,
-     UnitsInStock:punits
-    }).subscribe(res=>{
-      this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
-        this.products = result;
-      });
-    })
+    if(this.updated!=-1)
+    {
+      this.http.post('http://127.0.0.1:7000/updateProduct',{
+        productID:pid,
+        productName:pname,
+        UnitPrice:pprice,
+        UnitsInStock:punits
+       }).subscribe(res=>{
+         this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
+           this.products = result;
+         });
+       })
+    this.updated=-1;
+    }
+    else
+    {
+      this.http.post('http://127.0.0.1:7000/AddProduct',{
+        productID:pid,
+        productName:pname,
+        UnitPrice:pprice,
+        UnitsInStock:punits
+       }).subscribe(res=>{
+         this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
+           this.products = result;
+         });
+       })
+   
+    }
+   
 
 
   }
 
   updateField(index){
-    this.f=index;
+    this.updated=index;
     this.productID=this.products[index].ProductID;
     this.productName=this.products[index].ProductName;
     this.productPrice=this.products[index].UnitPrice;

@@ -68,6 +68,17 @@ async function FindContactByName(ContactName) {
     return await Customer.findOne({ ContactName: ContactName });
 }
 
+async function AddProduct(RequestBody)
+{
+    const newProduct=new Product({
+        ProductID:RequestBody.productID,
+        ProductName:RequestBody.productName,
+        UnitPrice:RequestBody.UnitPrice,
+        UnitsInStock:RequestBody.UnitsInStock
+    })
+    const res = await newProduct.save();
+
+}
 async function Register(RequestBody) {
     const cust = new Customer({
         CustomerID: "",
@@ -216,11 +227,17 @@ app.post('/deleteProduct', (req, res) => {
 
 app.post('/updateProduct', (req, res) => {
     console.log(req.body);
-
     UpdateproductByAdmin(req.body.productID,req.body.productName,req.body.UnitPrice,req.body.UnitsInStock);
     res.send({update:true});
     
 })
+
+app.post('/AddProduct',(req,res)=>{
+    console.log("add");
+    AddProduct(req.body);
+    res.send({added:true});
+})
+
 app.get('*', (req, res) => {
     res.set({
         'Content-Type': 'text/json',

@@ -661,7 +661,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!--<div *ngIf=\"cookie.get('role')=='user'\">-->\r\n\r\n    <div *ngIf=true>\r\n        <div class=\"row bg-warning\">\r\n            <div class=\"col-2 \" *ngFor=\"let product of products | paginate: { itemsPerPage: 10, currentPage: p }\">\r\n              <div  class=\"thumbnail bg-dark\">\r\n              <a class=\"text-white\" [routerLink]=\"['/details-product',product.ProductID,product.ProductName,product.UnitPrice,product.UnitsInStock]\">\r\n                  <p class=\" center\">\"ProductName: \"{{product.ProductName}}</p>\r\n                  <p class=\" center\">\"ProductPrice: \"{{product.UnitPrice}}</p>\r\n              </a>\r\n              </div>\r\n            </div>\r\n        <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>      \r\n  \r\n  </div>\r\n  </div>\r\n  \r\n\r\n<!--<div *ngIf=\"cookie.get('role')=='admin'\">-->\r\n  <div *ngIf=false>\r\n  <table class=\"table table-dark table-hover\">\r\n      <thead>\r\n          <tr>\r\n            <th>ProductID</th>\r\n            <th>ProductName</th>\r\n            <th>ProductPrice</th>\r\n            <th>ProductQuantity</th>\r\n          </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let product of products| paginate: { itemsPerPage: 8, currentPage: p };index as i\">\r\n              <td>{{product.ProductID}}</td>\r\n              <td>{{product.ProductName}}</td>\r\n              <td>{{product.UnitPrice}}</td>\r\n              <td>{{product.UnitsInStock}}</td>\r\n              <td><input type=\"button\" value=\"Delete\" class=\"btn btn-danger\" (click)=\"DeleteProductByAdmin(i)\"></td>\r\n              <td><input type=\"button\" value=\"Edit\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#exampleModal\" (click)=\"updateField(i)\"></td>\r\n            </tr>\r\n\r\n        </tbody>\r\n  </table>\r\n  <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>      \r\n</div>\r\n\r\n\r\n<div  id=\"modal\" class=\"modal\" tabindex=\"-1\" role=\"dialog\">\r\n    <div class=\"modal-dialog\" role=\"document\">\r\n      <div class=\"modal-content\">\r\n        <div class=\"modal-header\">\r\n          <h5 class=\"modal-title\">Edit Product</h5>\r\n        \r\n        </div>\r\n        <div class=\"modal-body\">\r\n\r\n         \r\n        </div>\r\n        \r\n        <div class=\"modal-footer\">\r\n          <button type=\"button\"id=\"save\" class=\"btn btn-primary\" data-dismiss=\"modal\" (click)=\"setArr(pname.value,pprice.value,units.value)\">save </button>\r\n          <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\r\n        </div>\r\n\r\n      </div>\r\n    </div>\r\n  </div>\r\n\r\n\r\n    <!-- Modal -->\r\n    <div class=\"modal fade\" id=\"exampleModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\r\n      <div class=\"modal-dialog\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n          <div class=\"modal-header\">\r\n            <h5 class=\"modal-title\" id=\"exampleModalLabel\">Product</h5>\r\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n              <span aria-hidden=\"true\">&times;</span>\r\n            </button>\r\n          </div>\r\n          <div class=\"modal-body\">\r\n              <form >\r\n                  <div class=\"form-group\">\r\n                      <label  for=\"ProductID\">ProductID</label>\r\n                       <label #pID>{{productID}}</label>\r\n                      </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"ProductName\">ProductName</label>\r\n                      <input id=\"ProductName\" type=\"text\" placeholder=\"enter your ProductName\" class=\"form-control\" value={{productName}} #pname >\r\n                  </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"UnitPrice\">UnitPrice</label>\r\n                      <input id=\"UnitPrice\" type=\"text\" placeholder=\"enter your UnitPrice\" class=\"form-control\" value={{productPrice}} #pprice >\r\n                  </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"UnitsInStock\">UnitsInStock</label>\r\n                      <input id=\"UnitsInStock\" type=\"text\" placeholder=\"enter your UnitsInStock\" class=\"form-control\" value={{productQuantity}} #units >\r\n                  </div>\r\n                </form>\r\n      \r\n          </div>\r\n          <div class=\"modal-footer\">\r\n            <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\r\n            <button type=\"button\" class=\"btn btn-primary\"data-dismiss=\"modal\" (click)=\"UpdateProductByAdmin(pID.innerText,pname.value,pprice.value,units.value)\">Save changes</button>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
+module.exports = "<!--<div *ngIf=\"cookie.get('role')=='user'\">-->\r\n\r\n    <div *ngIf=false>\r\n        <div class=\"row bg-warning\">\r\n            <div class=\"col-2 \" *ngFor=\"let product of products | paginate: { itemsPerPage: 10, currentPage: p }\">\r\n              <div  class=\"thumbnail bg-dark\">\r\n              <a class=\"text-white\" [routerLink]=\"['/details-product',product.ProductID,product.ProductName,product.UnitPrice,product.UnitsInStock]\">\r\n                  <p class=\" center\">\"ProductName: \"{{product.ProductName}}</p>\r\n                  <p class=\" center\">\"ProductPrice: \"{{product.UnitPrice}}</p>\r\n              </a>\r\n              </div>\r\n            </div>\r\n        <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>      \r\n  \r\n  </div>\r\n  </div>\r\n  \r\n\r\n<!--<div *ngIf=\"cookie.get('role')=='admin'\">-->\r\n  <div *ngIf=true>\r\n      <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#exampleModal\" style=\"float:right\">Add New Product</button>\r\n  <table class=\"table table-dark table-hover\">\r\n      <thead>\r\n          <tr>\r\n            <th>ProductID</th>\r\n            <th>ProductName</th>\r\n            <th>ProductPrice</th>\r\n            <th>ProductQuantity</th>\r\n          </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr *ngFor=\"let product of products| paginate: { itemsPerPage: 8, currentPage: p };index as i\">\r\n              <td>{{product.ProductID}}</td>\r\n              <td>{{product.ProductName}}</td>\r\n              <td>{{product.UnitPrice}}</td>\r\n              <td>{{product.UnitsInStock}}</td>\r\n              <td><input type=\"button\" value=\"Delete\" class=\"btn btn-danger\" (click)=\"DeleteProductByAdmin(i)\"></td>\r\n              <td><input type=\"button\" value=\"Edit\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#exampleModal\" (click)=\"updateField(i)\"></td>\r\n            </tr>\r\n\r\n        </tbody>\r\n  </table>\r\n  <pagination-controls (pageChange)=\"p = $event\"></pagination-controls>      \r\n</div>\r\n\r\n\r\n    <!-- Modal -->\r\n    <div class=\"modal fade\" id=\"exampleModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\r\n      <div class=\"modal-dialog\" role=\"document\">\r\n        <div class=\"modal-content\">\r\n          <div class=\"modal-header\">\r\n            <h5 class=\"modal-title\" id=\"exampleModalLabel\">Product</h5>\r\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n              <span aria-hidden=\"true\">&times;</span>\r\n            </button>\r\n          </div>\r\n          <div class=\"modal-body\">\r\n              <form >\r\n                  <div class=\"form-group\">\r\n                      <label  for=\"ProductID\">ProductID</label>\r\n                       <label #pID>{{productID}}</label>\r\n                      </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"ProductName\">ProductName</label>\r\n                      <input id=\"ProductName\" type=\"text\" placeholder=\"enter your ProductName\" class=\"form-control\" value={{productName}} #pname >\r\n                  </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"UnitPrice\">UnitPrice</label>\r\n                      <input id=\"UnitPrice\" type=\"text\" placeholder=\"enter your UnitPrice\" class=\"form-control\" value={{productPrice}} #pprice >\r\n                  </div>\r\n                  <div class=\"form-group\">\r\n                      <label for=\"UnitsInStock\">UnitsInStock</label>\r\n                      <input id=\"UnitsInStock\" type=\"text\" placeholder=\"enter your UnitsInStock\" class=\"form-control\" value={{productQuantity}} #units >\r\n                  </div>\r\n                </form>\r\n      \r\n          </div>\r\n          <div class=\"modal-footer\">\r\n            <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\r\n            <button type=\"button\" class=\"btn btn-primary\"data-dismiss=\"modal\" (click)=\"UpdateProductByAdmin(pID.innerText,pname.value,pprice.value,units.value)\">Save changes</button>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </div>\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -687,8 +687,12 @@ var ProductsComponent = /** @class */ (function () {
     function ProductsComponent(http, cookie) {
         this.http = http;
         this.cookie = cookie;
-        this.f = -1;
+        this.updated = -1;
         this.p = 1;
+        this.productID = " ";
+        this.productName = " ";
+        this.productPrice = " ";
+        this.productQuantity = " ";
     }
     ProductsComponent.prototype.DeleteProductByAdmin = function (index) {
         console.log(this.products[index]);
@@ -705,19 +709,34 @@ var ProductsComponent = /** @class */ (function () {
         console.log(pname);
         console.log(pprice);
         console.log(punits);
-        this.http.post('http://127.0.0.1:7000/updateProduct', {
-            productID: pid,
-            productName: pname,
-            UnitPrice: pprice,
-            UnitsInStock: punits
-        }).subscribe(function (res) {
-            _this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
-                _this.products = result;
+        if (this.updated != -1) {
+            this.http.post('http://127.0.0.1:7000/updateProduct', {
+                productID: pid,
+                productName: pname,
+                UnitPrice: pprice,
+                UnitsInStock: punits
+            }).subscribe(function (res) {
+                _this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
+                    _this.products = result;
+                });
             });
-        });
+            this.updated = -1;
+        }
+        else {
+            this.http.post('http://127.0.0.1:7000/AddProduct', {
+                productID: pid,
+                productName: pname,
+                UnitPrice: pprice,
+                UnitsInStock: punits
+            }).subscribe(function (res) {
+                _this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
+                    _this.products = result;
+                });
+            });
+        }
     };
     ProductsComponent.prototype.updateField = function (index) {
-        this.f = index;
+        this.updated = index;
         this.productID = this.products[index].ProductID;
         this.productName = this.products[index].ProductName;
         this.productPrice = this.products[index].UnitPrice;

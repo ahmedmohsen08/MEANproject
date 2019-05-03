@@ -1,6 +1,6 @@
 <!--<div *ngIf="cookie.get('role')=='user'">-->
 
-    <div *ngIf=true>
+    <div *ngIf=false>
         <div class="row bg-warning">
             <div class="col-2 " *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: p }">
               <div  class="thumbnail bg-dark">
@@ -17,7 +17,8 @@
   
 
 <!--<div *ngIf="cookie.get('role')=='admin'">-->
-  <div *ngIf=false>
+  <div *ngIf=true>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="float:right">Add New Product</button>
   <table class="table table-dark table-hover">
       <thead>
           <tr>
@@ -41,28 +42,6 @@
   </table>
   <pagination-controls (pageChange)="p = $event"></pagination-controls>      
 </div>
-
-
-<div  id="modal" class="modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Edit Product</h5>
-        
-        </div>
-        <div class="modal-body">
-
-         
-        </div>
-        
-        <div class="modal-footer">
-          <button type="button"id="save" class="btn btn-primary" data-dismiss="modal" (click)="setArr(pname.value,pprice.value,units.value)">save </button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
 
 
     <!-- Modal -->
