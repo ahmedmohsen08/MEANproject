@@ -1,6 +1,6 @@
 <!--<div *ngIf="cookie.get('role')=='user'">-->
 
-    <div *ngIf=false>
+    <div *ngIf=true>
         <div class="row bg-warning">
             <div class="col-2 " *ngFor="let product of products | paginate: { itemsPerPage: 10, currentPage: p }">
               <div  class="thumbnail bg-dark">
@@ -17,7 +17,7 @@
   
 
 <!--<div *ngIf="cookie.get('role')=='admin'">-->
-  <div *ngIf=true>
+  <div *ngIf=false>
   <table class="table table-dark table-hover">
       <thead>
           <tr>

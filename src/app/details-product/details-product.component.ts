@@ -25,12 +25,17 @@ export class DetailsProductComponent implements OnInit {
     console.log(ProdQuantity);
 
     if(( Number(ProdQuantity)>0) && (Number(ProdQuantity) <=Number(this.UnitsInStock)))
-    {        
-      this.productsID=JSON.parse(this.cookie.get("productsID"));
-      console.log(this.productsID)
-      console.log(this.productsID.length)
+    {      
+      if(this.cookie.get("productsID")=="")
+      {
+        this.valid=true;
+        this.cookie.set("productsID",JSON.stringify(this.productsID));
+        this.productsID.push({"productid":this.ProductID,"productName":this.ProductName,"quantity":Number(ProdQuantity),"UnitPrice":Number(this.UnitPrice),"TotalPrice":newQ,"UnitsInStock":this.UnitsInStock});
 
-    
+      }  
+      else
+      {
+        this.productsID=JSON.parse(this.cookie.get("productsID"));
       var index=this.productsID.findIndex(p=>p.productid==this.ProductID)
 
       if(index!=-1)
@@ -61,7 +66,9 @@ export class DetailsProductComponent implements OnInit {
 
      this.cookie.set("productsID",JSON.stringify(this.productsID));
         console.log(JSON.parse(this.cookie.get("productsID")));
-      console.log("valid")
+       console.log("valid")
+      }
+      
     }
   
     else
