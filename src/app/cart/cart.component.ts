@@ -55,7 +55,9 @@ export class CartComponent implements OnInit {
   Checkout(){
     console.log("checkout");
     console.log(this.cookie.get("accountUserName"));
-    if(this.cookie.get("accountUserName")!=" ")
+    if(this.cookie.get("accountUserName")=="")
+    console.log("cookie");
+   /* if(this.cookie.get("accountUserName")!="")
     {
       console.log(this.cookie.get("accountUserName").toString())
       this.http.post('http://127.0.0.1:7000/checkout',
@@ -69,7 +71,7 @@ export class CartComponent implements OnInit {
         console.log(error);
       });
     }
- 
+ */
   }
   ngOnInit() {
    console.log(JSON.parse(this.cookie.get("productsID")))

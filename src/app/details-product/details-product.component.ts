@@ -17,7 +17,7 @@ export class DetailsProductComponent implements OnInit {
   valid;
   constructor(private route:ActivatedRoute,private cookie:CookieService) {
    //this.cookie.delete("productsID")
-  // this.cookie.set("productsID",JSON.stringify(this.productsID));
+   //this.cookie.set("productsID",JSON.stringify(this.productsID));
    }
   AddToCart(ProdQuantity)
   {
@@ -25,7 +25,7 @@ export class DetailsProductComponent implements OnInit {
     console.log(ProdQuantity);
 
     if(( Number(ProdQuantity)>0) && (Number(ProdQuantity) <=Number(this.UnitsInStock)))
-    {  
+    {        
       this.productsID=JSON.parse(this.cookie.get("productsID"));
       console.log(this.productsID)
       console.log(this.productsID.length)

@@ -12,6 +12,10 @@ export class ProductsComponent implements OnInit {
   products
   f=-1;
   p=1;
+  productID;
+  productName;
+  productPrice;
+  productQuantity;
   constructor(private http: HttpClient,private cookie: CookieService) { }
 
   DeleteProductByAdmin(index){
@@ -29,18 +33,34 @@ export class ProductsComponent implements OnInit {
   }
 
  
-  UpdateProductByAdmin(price,units,index){
-   this.products[index].UnitPrice=price;
-   this.products[index].UnitsInStock=units;
-   this.f=-1;
-  /* this.http.post('http://127.0.0.1:7000/updateProduct',{
-    Productid:this.products[index].ProductID,
-    ProductPrice: this.products[index].UnitPrice,
-    productQuantity:this.products[index].UnitsInStock
-  })*/
+  UpdateProductByAdmin(pid,pname,pprice,punits){
+  
+    console.log(pid);
+    console.log(pname);
+    console.log(pprice);
+    console.log(punits);
+
+    this.http.post('http://127.0.0.1:7000/updateProduct',{
+     productID:pid,
+     productName:pname,
+     UnitPrice:pprice,
+     UnitsInStock:punits
+    }).subscribe(res=>{
+      this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
+        this.products = result;
+      });
+    })
+
+
   }
+
   updateField(index){
     this.f=index;
+    this.productID=this.products[index].ProductID;
+    this.productName=this.products[index].ProductName;
+    this.productPrice=this.products[index].UnitPrice;
+    this.productQuantity=this.products[index].UnitsInStock;
+    console.log(index);
   }
   
  
@@ -48,6 +68,7 @@ export class ProductsComponent implements OnInit {
     this.cookie.get('role')=='admin'?this.IsUser=false:this.IsUser=true;
     this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
       this.products = result;
+      console.log(this.products);
     });
   }
 
