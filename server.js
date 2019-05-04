@@ -39,6 +39,7 @@ const productsSchema = new mongoose.Schema({
 
 const order_detailsSchema = new mongoose.Schema({
     ProductID: { type: mongoose.Types.ObjectId, ref: 'products' },
+    OrderID: Number,
     UnitPrice: String,
     Quantity: String
 }, { toJSON: { virtuals: true } });
@@ -122,16 +123,17 @@ async function GetProducts() {
 }
 
 async function GetOrders(username) {
-    var userID = await Customer.find({ ContactName: username }).select('CustomerID');
-    var orders = await Order.find({ CustomerID: userID });
-    console.log(orders);
+    var user=await Customer.findOne({ContactName:username}).select('CustomerID');
+    var ID=user.CustomerID;
+    var orders = await Order.find({ CustomerID: ID });
 
     var order_details = [];
     for (let order of orders) {
-        order_details.push(Order_Details.find({ OrderID: order.OrderID }).populate('product'));
+        var res = await Order_Details.find({ OrderID: order.OrderID }).populate('product');
+        order_details.push({ orderID: order.OrderID, OrderDate: order.OrderDate, products: res });
     }
 
-    return await Order_Details.find().populate('product');
+    return order_details;
 }
 
 async function DeleteproductByAdmin(prodID) {
@@ -203,7 +205,7 @@ app.post('/login', (req, res) => {
     }
 });
 
-app.get('/getOrders', (req, res) => {
+app.post('/getOrders', (req, res) => {
     res.set({
         'Content-Type': 'text/json',
         'Access-Control-Allow-Origin': '*'

@@ -597,7 +597,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\r\n  orders works!\r\n</p>\r\n"
+module.exports = "<div>\r\n  <table class=\"table table-dark table-hover\">\r\n    <thead>\r\n      <tr>\r\n        <th>OrderID</th>\r\n        <th>Products</th>\r\n        <th>Order Date</th>\r\n      </tr>\r\n    </thead>\r\n    <tbody>\r\n      <tr *ngFor=\"let order of orders\">\r\n        <td>{{order.orderID}}</td>\r\n\r\n        <td>\r\n          <tr *ngFor=\"let product of order.products\">\r\n            <td>{{product.product.ProductName}}</td>\r\n            <td>Quantity: {{product.Quantity}}</td>\r\n            <td>Price: {{product.UnitPrice}}</td>\r\n          </tr>\r\n        </td>\r\n\r\n        <td>{{order.OrderDate | date:'longDate'}}</td>\r\n        <td><input type=\"button\" value=\"Reorder\" class=\"btn btn-info\" ></td>\r\n      </tr>\r\n    </tbody>\r\n  </table>\r\n</div>"
 
 /***/ }),
 
@@ -614,18 +614,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ngx-cookie-service */ "./node_modules/ngx-cookie-service/index.js");
+
 
 
 
 var OrdersComponent = /** @class */ (function () {
-    function OrdersComponent(http) {
+    function OrdersComponent(http, cookie) {
         this.http = http;
+        this.cookie = cookie;
     }
     OrdersComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.http.get('http://127.0.0.1:7000/getOrders', { params: { username: 'FRANS' } }).subscribe(function (result) {
-            _this.orders = result;
-            console.log(_this.orders);
+        this.http.post('http://127.0.0.1:7000/getOrders', { username: "Paul Henriot" } /*{username:this.cookie.get('accountUserName')}*/).subscribe(function (data) {
+            _this.orders = data;
         });
     };
     OrdersComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -634,7 +636,7 @@ var OrdersComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./orders.component.html */ "./src/app/orders/orders.component.html"),
             styles: [__webpack_require__(/*! ./orders.component.css */ "./src/app/orders/orders.component.css")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"], ngx_cookie_service__WEBPACK_IMPORTED_MODULE_3__["CookieService"]])
     ], OrdersComponent);
     return OrdersComponent;
 }());
@@ -689,10 +691,6 @@ var ProductsComponent = /** @class */ (function () {
         this.cookie = cookie;
         this.updated = -1;
         this.p = 1;
-        this.productID = " ";
-        this.productName = " ";
-        this.productPrice = " ";
-        this.productQuantity = " ";
     }
     ProductsComponent.prototype.DeleteProductByAdmin = function (index) {
         console.log(this.products[index]);
