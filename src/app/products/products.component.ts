@@ -16,6 +16,7 @@ export class ProductsComponent implements OnInit {
   productName;
   productPrice;
   productQuantity;
+  display;
   constructor(private http: HttpClient,private cookie: CookieService) { }
 
   DeleteProductByAdmin(index){
@@ -56,8 +57,13 @@ export class ProductsComponent implements OnInit {
     }
     else
     {
+      do{
+        var id=Math.floor(Math.random() * 100)+10;
+        var exist=this.products.some(p=>p.ProductID==id)
+      }while(exist==true)
+    
       this.http.post('http://127.0.0.1:7000/AddProduct',{
-        productID:pid,
+        productID:id,
         productName:pname,
         UnitPrice:pprice,
         UnitsInStock:punits
@@ -66,13 +72,26 @@ export class ProductsComponent implements OnInit {
            this.products = result;
          });
        })
+    }
+    this.productID="";
+    this.productName="";
+    this.productPrice="";
+    this.productQuantity="";
    
     }
+
+
+    onCloseHandled(){
+      this.productID="";
+      this.productName="";
+      this.productPrice="";
+      this.productQuantity="";
+    }
+
    
 
 
-  }
-
+  
   updateField(index){
     this.updated=index;
     this.productID=this.products[index].ProductID;
