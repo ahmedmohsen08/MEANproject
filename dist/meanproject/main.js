@@ -801,7 +801,7 @@ var ProductsComponent = /** @class */ (function () {
     ProductsComponent.prototype.DeleteProductByAdmin = function (index) {
         console.log(this.products[index]);
         console.log(this.products[index].ProductID);
-        this.http.post('http://127.0.0.1:7000/deleteProduct', {
+        this.http.post('deleteProduct', {
             productid: this.products[index].ProductID
         }).subscribe(function (data) {
         });
@@ -814,13 +814,13 @@ var ProductsComponent = /** @class */ (function () {
         console.log(pprice);
         console.log(punits);
         if (this.updated != -1) {
-            this.http.post('http://127.0.0.1:7000/updateProduct', {
+            this.http.post('updateProduct', {
                 productID: pid,
                 productName: pname,
                 UnitPrice: pprice,
                 UnitsInStock: punits
             }).subscribe(function (res) {
-                _this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
+                _this.http.get('getAllProducts').subscribe(function (result) {
                     _this.products = result;
                 });
             });
@@ -831,13 +831,13 @@ var ProductsComponent = /** @class */ (function () {
                 var id = Math.floor(Math.random() * 100) + 10;
                 var exist = this.products.some(function (p) { return p.ProductID == id; });
             } while (exist == true);
-            this.http.post('http://127.0.0.1:7000/AddProduct', {
+            this.http.post('AddProduct', {
                 productID: id,
                 productName: pname,
                 UnitPrice: pprice,
                 UnitsInStock: punits
             }).subscribe(function (res) {
-                _this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
+                _this.http.get('getAllProducts').subscribe(function (result) {
                     _this.products = result;
                 });
             });
@@ -864,7 +864,7 @@ var ProductsComponent = /** @class */ (function () {
     ProductsComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.cookie.get('role') == 'admin' ? this.IsUser = false : this.IsUser = true;
-        this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(function (result) {
+        this.http.get('getAllProducts').subscribe(function (result) {
             _this.products = result;
             console.log(_this.products);
         });

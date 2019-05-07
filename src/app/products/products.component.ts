@@ -24,7 +24,7 @@ export class ProductsComponent implements OnInit {
     console.log(this.products[index].ProductID);
 
 
-    this.http.post('http://127.0.0.1:7000/deleteProduct', {
+    this.http.post('deleteProduct', {
       productid: this.products[index].ProductID
     }).subscribe(data => {
 
@@ -42,13 +42,13 @@ export class ProductsComponent implements OnInit {
     console.log(punits);
 
     if (this.updated != -1) {
-      this.http.post('http://127.0.0.1:7000/updateProduct', {
+      this.http.post('updateProduct', {
         productID: pid,
         productName: pname,
         UnitPrice: pprice,
         UnitsInStock: punits
       }).subscribe(res => {
-        this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
+        this.http.get('getAllProducts').subscribe(result => {
           this.products = result;
         });
       })
@@ -60,13 +60,13 @@ export class ProductsComponent implements OnInit {
         var exist = this.products.some(p => p.ProductID == id)
       } while (exist == true)
 
-      this.http.post('http://127.0.0.1:7000/AddProduct', {
+      this.http.post('AddProduct', {
         productID: id,
         productName: pname,
         UnitPrice: pprice,
         UnitsInStock: punits
       }).subscribe(res => {
-        this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
+        this.http.get('getAllProducts').subscribe(result => {
           this.products = result;
         });
       })
@@ -102,7 +102,7 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit() {
     this.cookie.get('role') == 'admin' ? this.IsUser = false : this.IsUser = true;
-    this.http.get('http://127.0.0.1:7000/getAllProducts').subscribe(result => {
+    this.http.get('getAllProducts').subscribe(result => {
       this.products = result;
       console.log(this.products);
     });
