@@ -44,7 +44,7 @@ export class OrdersComponent implements OnInit {
       this.router.navigateByUrl('login');
     }
     if (this.cookie.get("accountUserName") != "") {
-      this.http.post('http://127.0.0.1:7000/checkout',
+      this.http.post('checkout',
         {
           ProductsCart: this.products,
           CustomerName: this.cookie.get('accountUserName')

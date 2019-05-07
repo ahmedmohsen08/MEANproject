@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
     console.log(form.valid);
     if (form.valid) {
       console.log('logging in');
-      this.http.post('http://127.0.0.1:7000/login',
+      this.http.post('login',
         {
           ContactName: ContactName,
           Password: Password,

@@ -297,7 +297,7 @@ var CartComponent = /** @class */ (function () {
             this.router.navigateByUrl('login');
         }
         if (this.cookie.get("accountUserName") != "") {
-            this.http.post('http://127.0.0.1:7000/checkout', {
+            this.http.post('checkout', {
                 ProductsCart: this.ProductsCart,
                 CustomerName: this.cookie.get('accountUserName')
             }).toPromise()
@@ -553,7 +553,7 @@ var LoginComponent = /** @class */ (function () {
         console.log(form.valid);
         if (form.valid) {
             console.log('logging in');
-            this.http.post('http://127.0.0.1:7000/login', {
+            this.http.post('login', {
                 ContactName: ContactName,
                 Password: Password,
             }).toPromise()
@@ -717,7 +717,7 @@ var OrdersComponent = /** @class */ (function () {
             this.router.navigateByUrl('login');
         }
         if (this.cookie.get("accountUserName") != "") {
-            this.http.post('http://127.0.0.1:7000/checkout', {
+            this.http.post('checkout', {
                 ProductsCart: this.products,
                 CustomerName: this.cookie.get('accountUserName')
             }).toPromise()
@@ -943,7 +943,7 @@ var RegistrationComponent = /** @class */ (function () {
         console.log(form.valid);
         if (form.valid) {
             console.log('submitting');
-            this.http.post('http://127.0.0.1:7000/register', {
+            this.http.post('register', {
                 ContactName: ContactName,
                 Password: Password,
                 ContactTitle: ContactTitle,

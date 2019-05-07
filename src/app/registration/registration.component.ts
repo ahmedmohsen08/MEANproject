@@ -25,7 +25,7 @@ export class RegistrationComponent implements OnInit {
     console.log(form.valid);
     if (form.valid) {
       console.log('submitting');
-      this.http.post('http://127.0.0.1:7000/register',
+      this.http.post('register',
         {
           ContactName: ContactName,
           Password: Password,
