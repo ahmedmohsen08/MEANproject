@@ -12,10 +12,10 @@
    </thead>
    <tbody>
      <tr *ngFor="let prd of ProductsCart;index as i ">
-      <td>{{prd.productName}}</td>
+      <td>{{prd.ProductName}}</td>
       <td>{{prd.UnitPrice}}</td>
       <td>
-          <span [hidden]="f==i">{{prd.quantity}}</span>
+          <span [hidden]="f==i">{{prd.Quantity}}</span>
           <input type="text" *ngIf="f==i" [(ngModel)]='prd.quantity' #txt (change)='Update(txt.value,i)'>
           <div *ngIf=!valid>
             <span class="alert alert-danger">Invalid Quantity</span>

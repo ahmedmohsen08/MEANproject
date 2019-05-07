@@ -8,20 +8,67 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let order of orders">
+      <tr *ngFor="let order of orders;index as i">
         <td>{{order.orderID}}</td>
 
         <td>
-          <tr *ngFor="let product of order.products">
-            <td>{{product.product.ProductName}}</td>
-            <td>Quantity: {{product.Quantity}}</td>
-            <td>Price: {{product.UnitPrice}}</td>
-          </tr>
-        </td>
+      <tr *ngFor="let product of order.products">
+        <td>{{product.product.ProductName}}</td>
+        <td>Quantity: {{product.Quantity}}</td>
+        <td>Price: {{product.UnitPrice}}</td>
+      </tr>
+      </td>
 
-        <td>{{order.OrderDate | date:'longDate'}}</td>
-        <td><input type="button" value="Reorder" class="btn btn-info" ></td>
+      <td>{{order.OrderDate | date:'longDate'}}</td>
+      <td><input type="button" value="Reorder" class="btn btn-info" data-toggle="modal" data-target="#exampleModal" (click)="selectRow(i)">
+      </td>
       </tr>
     </tbody>
   </table>
+</div>
+
+
+<div class="modal fade" id="exampleModal" [ngStyle]="{'display':display}" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Product</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>ProductName</th>
+              <th>Quantity</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let product of products;index as i">
+              <td>{{product.product.ProductName}}</td>
+              <td>
+                <span [hidden]="f==i">{{product.Quantity}}</span>
+                <input type="text" *ngIf="f==i" [(ngModel)]='product.Quantity' #txt (change)='Update(txt.value,i)'>
+                <div *ngIf="!valid && f==i">
+                  <Span class="alert alert-danger">Invalid Quantity</Span>
+                </div>
+              </td>
+              <td>{{product.UnitPrice}}</td>
+              <td><button (click)="Index(i)" class="btn btn-info">Edit</button></td>
+              <td><button (click)="Delete(i)" class="btn btn-info">Delete</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="Checkout()">Order</button>
+      </div>
+    </div>
+  </div>
 </div>

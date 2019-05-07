@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -12,7 +13,8 @@ export class RegistrationComponent implements OnInit {
   //   contactNameControl:new FormControl('',[Validators.required,Validators.minLength(5),Validators.maxLength(15)])
   // })
 
-  constructor(private http: HttpClient) { }
+  flag=false;
+  constructor(private http: HttpClient, private router:Router) { }
 
   ngOnInit() {
   }
@@ -36,7 +38,15 @@ export class RegistrationComponent implements OnInit {
           Country: Country,
           PostalCode: PostalCode,
           CompanyName: CompanyName
-        }).toPromise().catch(error => {
+        }).toPromise().then(res => {
+          var response:any = res;
+          if (response.state == 'exist') {
+            this.flag=true;
+          }
+          else if (response.state == 'not exist') {
+            this.router.navigateByUrl('login');
+          }
+        }).catch(error => {
           console.log(error);
         });
     }

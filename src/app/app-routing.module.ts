@@ -7,9 +7,10 @@ import { ProductsComponent } from './products/products.component';
 import { DetailsProductComponent } from './details-product/details-product.component';
 import { CartComponent } from './cart/cart.component';
 import { OrdersComponent } from './orders/orders.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  {path:'navbar',component:NavbarComponent},
+  {path:'',component:HomeComponent},
   {path:'registration',component:RegistrationComponent},
   {path:'login',component:LoginComponent},
   {path:'allProducts',component:ProductsComponent},

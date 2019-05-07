@@ -14,6 +14,7 @@ import { DetailsProductComponent } from './details-product/details-product.compo
 import { CartComponent } from './cart/cart.component';
 import { OrdersComponent } from './orders/orders.component';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
     ProductsComponent,
     DetailsProductComponent,
     CartComponent,
-    OrdersComponent
+    OrdersComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
