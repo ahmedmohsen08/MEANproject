@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 
-mongoose.connect('mongodb://localhost:27017/Northwind', { useNewUrlParser: true })
+mongoose.connect('mongodb+srv://ahmedmohsen:Aa01203052224@northwind-fohlg.mongodb.net/Northwind?retryWrites=true', { useNewUrlParser: true })
     .then(() => console.log('connected'))
     .catch(() => console.log("not connected"))
 
